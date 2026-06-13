@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regulated Lab Agent — the model proposes, the code decides</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+  :root{
+    --ink:#0f172a; --accent:#0369a1; --accent2:#1d4ed8;
+    --green:#059669; --amber:#b45309; --red:#dc2626;
+    --soft:#eff6ff; --bg:#f1f5f9; --card:#ffffff; --rule:#e2e8f0; --mute:#64748b;
+    --lab:#1e3a5f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Inter,system-ui,sans-serif;color:#334155;background:var(--bg);line-height:1.45;padding:24px 16px 60px}
+  .wrap{max-width:1180px;margin:0 auto}
+  header{text-align:center;margin-bottom:18px}
+  h1{font-family:"Inter Tight";font-weight:800;font-size:clamp(20px,3.4vw,30px);color:var(--ink);letter-spacing:-.4px}
+  h1 .accent{color:var(--accent)}
+  .sub{color:var(--mute);font-size:14px;margin-top:6px;max-width:720px;margin-left:auto;margin-right:auto}
+  .byline{font-size:12px;color:var(--mute);margin-top:8px}
+  .ctxbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0 20px}
+  .ctx{font-size:11.5px;font-weight:600;background:var(--lab);color:#e2e8f0;border-radius:8px;padding:6px 12px;letter-spacing:.2px}
+  .ctx span{color:#93c5fd}
+  .grid{display:grid;grid-template-columns:320px 1fr 340px;gap:16px;align-items:start}
+  @media(max-width:980px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:16px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .card h2{font-family:"Inter Tight";font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink);margin-bottom:10px}
+  label{font-size:12px;font-weight:600;color:var(--mute);display:block;margin-bottom:6px}
+  textarea{width:100%;min-height:84px;resize:vertical;border:1px solid var(--rule);border-radius:10px;padding:10px;font-family:Inter;font-size:14px;color:var(--ink)}
+  textarea:focus{outline:none;border-color:var(--accent)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+  .chip{font-size:12px;border:1px solid var(--rule);background:#f8fafc;color:#475569;border-radius:999px;padding:5px 10px;cursor:pointer;transition:.12s}
+  .chip:hover{border-color:var(--accent);color:var(--accent);background:var(--soft)}
+  .run{margin-top:12px;width:100%;border:none;background:var(--accent);color:#fff;font-family:"Inter Tight";font-weight:700;font-size:15px;padding:11px;border-radius:10px;cursor:pointer;transition:.12s}
+  .run:hover{background:#075985}
+  .run:disabled{opacity:.5;cursor:not-allowed}
+  .legend{margin-top:14px;font-size:11.5px;color:var(--mute)}
+  .legend b{color:var(--ink)}
+  .pill{display:inline-block;font-size:10px;font-weight:700;border-radius:6px;padding:2px 7px;text-transform:uppercase;letter-spacing:.4px}
+  .pill.auto{background:#dcfce7;color:var(--green)}
+  .pill.ask{background:#fef3c7;color:var(--amber)}
+  .pill.never{background:#fee2e2;color:var(--red)}
+  .steps{display:flex;flex-direction:column;gap:12px}
+  .step{border:1px solid var(--rule);border-left:3px solid var(--rule);border-radius:10px;padding:12px 14px;opacity:.35;transform:translateY(4px);transition:.35s}
+  .step.show{opacity:1;transform:none}
+  .step .stitle{font-family:"Inter Tight";font-weight:700;font-size:13px;color:var(--ink);display:flex;align-items:center;gap:8px}
+  .step .num{width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .step .body{font-size:13px;margin-top:7px;color:#475569}
+  .step.s2{border-left-color:var(--accent2)}
+  .step.s3{border-left-color:var(--accent)}
+  .untrusted{font-size:10px;font-weight:700;color:var(--amber);background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:1px 6px;text-transform:uppercase;letter-spacing:.4px}
+  pre.json{font-family:"JetBrains Mono",monospace;font-size:12px;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:10px;margin-top:8px;overflow:auto}
+  .gaterule{font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--mute);margin-top:6px}
+  .outcome{display:flex;align-items:center;gap:10px;font-family:"Inter Tight";font-weight:800;font-size:16px;margin-top:4px}
+  .outcome.exec{color:var(--green)}.outcome.hold{color:var(--amber)}.outcome.block{color:var(--red)}
+  .badge{font-size:11px;font-weight:700;border-radius:6px;padding:3px 9px;text-transform:uppercase;letter-spacing:.5px}
+  .badge.exec{background:#dcfce7;color:var(--green)}.badge.hold{background:#fef3c7;color:var(--amber)}.badge.block{background:#fee2e2;color:var(--red)}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th{text-align:left;color:var(--mute);font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;padding:6px 6px;border-bottom:1px solid var(--rule)}
+  td{padding:6px 6px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+  td.hash{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--mute)}
+  td.ev{font-weight:600;color:var(--ink)}
+  tr.tampered td{background:#fff1f2}
+  .auditbtns{display:flex;gap:8px;margin-top:12px}
+  .btn{flex:1;border:1px solid var(--rule);background:#f8fafc;color:#475569;font-weight:600;font-size:12px;padding:8px;border-radius:8px;cursor:pointer;transition:.12s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.danger:hover{border-color:var(--red);color:var(--red)}
+  .verify{margin-top:10px;font-family:"JetBrains Mono",monospace;font-size:12px;padding:8px 10px;border-radius:8px;display:none}
+  .verify.ok{display:block;background:#dcfce7;color:#065f46}
+  .verify.bad{display:block;background:#fee2e2;color:#991b1b}
+  .empty{color:var(--mute);font-size:12.5px;font-style:italic;padding:10px 4px}
+  .lims{font-size:12px;background:#f8fafc;border:1px solid var(--rule);border-radius:10px;padding:10px;margin-top:10px}
+  .lims dt{font-weight:600;color:var(--mute);font-size:10px;text-transform:uppercase;letter-spacing:.4px;margin-top:6px}
+  .lims dt:first-child{margin-top:0}
+  .lims dd{color:var(--ink);margin:2px 0 0}
+  .hold{color:var(--amber);font-weight:600}
+  footer{text-align:center;color:var(--mute);font-size:12px;margin-top:26px;line-height:1.7}
+  code{font-family:"JetBrains Mono",monospace;font-size:11.5px;background:#f1f5f9;padding:1px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Regulated Lab Agent — <span class="accent">the model proposes, the code decides</span></h1>
+    <p class="sub">A QC lab scenario: a scientist asks for help with batch B-2047. The AI agent <em>proposes</em> an action — summarize results, query LIMS, flag an anomaly, write an ELN entry, or release a batch. A permission gate <em>decides</em> what can run. Every step lands in a tamper-evident audit trail. Fictional workflow — not Thermo Fisher software.</p>
+    <div class="ctxbar">
+      <div class="ctx">QC Lab · <span>HPLC</span></div>
+      <div class="ctx">Batch · <span>B-2047</span></div>
+      <div class="ctx">LIMS status · <span>hold</span> — pending QA review</div>
+      <div class="ctx">Analyst · <span>Dr. Rivera</span></div>
+    </div>
+    <p class="byline">Built by Ainoa Figueroa Vidal · lab digitalization &amp; regulated AI patterns · interactive demo, no install</p>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h2>1 · Scientist request</h2>
+      <label for="msg">Pretend you're a QC analyst. Ask anything about the batch:</label>
+      <textarea id="msg" placeholder="e.g. Summarize chromatography results for batch B-2047"></textarea>
+      <div class="chips" id="chips"></div>
+      <button class="run" id="run">Run lab agent →</button>
+      <dl class="lims">
+        <dt>LIMS snapshot (read-only)</dt>
+        <dd>Batch B-2047 · 24 samples · HPLC purity run</dd>
+        <dt>QC status</dt>
+        <dd class="hold">On hold — 1 sample off-spec (S-18 peak ratio)</dd>
+        <dt>Last ELN entry</dt>
+        <dd>2026-06-11 · Deviation draft by QA</dd>
+      </dl>
+      <div class="legend">
+        <p style="margin-bottom:6px"><b>Permission policy</b> (enforced in code, not prompts):</p>
+        <p><span class="pill auto">auto</span> generate_summary, query_lims — read-only, low risk</p>
+        <p style="margin-top:4px"><span class="pill ask">ask</span> flag_anomaly, write_eln_entry — human review before write</p>
+        <p style="margin-top:4px"><span class="pill never">never</span> release_batch, update_lims_status — human only, GxP-critical</p>
+        <p style="margin-top:8px">Unknown action → <b>fail closed</b> (never). AUTO needs confidence ≥ 0.70 or it escalates.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>2 · Agent pipeline</h2>
+      <div class="steps">
+        <div class="step s1" id="st1">
+          <div class="stitle"><span class="num">1</span> Request received</div>
+          <div class="body" id="b1">Waiting for a request…</div>
+        </div>
+        <div class="step s2" id="st2">
+          <div class="stitle"><span class="num">2</span> LLM proposes <span class="untrusted">model output · untrusted</span></div>
+          <div class="body" id="b2">—</div>
+        </div>
+        <div class="step s3" id="st3">
+          <div class="stitle"><span class="num">3</span> Permission gate decides</div>
+          <div class="body" id="b3">—</div>
+        </div>
+        <div class="step s4" id="st4">
+          <div class="stitle"><span class="num">4</span> Outcome</div>
+          <div class="body" id="b4">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>3 · Append-only audit log</h2>
+      <div id="auditwrap">
+        <div class="empty" id="auditempty">No events yet. Run the agent to populate the chain.</div>
+        <table id="audittable" style="display:none">
+          <thead><tr><th>#</th><th>event</th><th>hash</th></tr></thead>
+          <tbody id="auditbody"></tbody>
+        </table>
+      </div>
+      <div class="auditbtns">
+        <button class="btn" id="verify">Verify chain</button>
+        <button class="btn danger" id="tamper">Tamper a row</button>
+      </div>
+      <div class="verify" id="verifyout"></div>
+      <p class="legend" style="margin-top:10px">Each row hashes the one before it (<code>prev_hash</code>). Editing history breaks the chain — try <b>Tamper</b> then <b>Verify</b>.</p>
+    </div>
+  </div>
+
+  <footer>
+    The model never changes LIMS, ELN, or batch release directly — code decides, humans approve GxP-critical actions, everything is logged.<br>
+    Same architecture I use in regulated clinical AI: closed action set, fail-closed gate, hash-chained audit. Fictional QC scenario for illustration.
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+const BATCH = "B-2047";
+const ANALYST = "Dr. Rivera";
+
+function mockDecide(msg, analyst){
+  const t = msg.toLowerCase();
+  if(t.includes("release") || t.includes("ship") || t.includes("approve for"))
+    return {action:"release_batch", target:BATCH, reason:"Analyst requests batch release for distribution.", confidence:0.92, payload:{batch:BATCH,lims_status:"hold"}};
+  if(t.includes("update lims") || t.includes("change status") || t.includes("clear hold") || t.includes("set status"))
+    return {action:"update_lims_status", target:BATCH, reason:"Request to change LIMS batch status.", confidence:0.89, payload:{new_status:"released"}};
+  if(t.includes("anomaly") || t.includes("off-spec") || t.includes("peak ratio") || t.includes("flag"))
+    return {action:"flag_anomaly", target:"S-18", reason:"Potential QC anomaly detected — needs QA review before ELN.", confidence:0.86, payload:{sample:"S-18",metric:"peak_ratio"}};
+  if(t.includes("eln") || t.includes("log") || t.includes("deviation") || t.includes("record note"))
+    return {action:"write_eln_entry", target:BATCH, reason:"Analyst wants to record a lab notebook entry.", confidence:0.84, payload:{entry_type:"deviation_note"}};
+  if(t.includes("status") || t.includes("hold") || t.includes("lims"))
+    return {action:"query_lims_status", target:BATCH, reason:"Read-only LIMS status query.", confidence:0.91, payload:{field:"qc_status"}};
+  if(t.includes("summarize") || t.includes("summary") || t.includes("results") || t.includes("chromatography") || t.includes("hplc"))
+    return {action:"generate_summary", target:BATCH, reason:"Summarize QC chromatography results for the batch.", confidence:0.88, payload:{method:"HPLC",samples:24}};
+  return {action:"generate_summary", target:BATCH, reason:"General batch question — default to read-only summary.", confidence:0.74, payload:{}};
+}
+
+const POLICY = {
+  generate_summary:"auto",
+  query_lims_status:"auto",
+  flag_anomaly:"ask",
+  write_eln_entry:"ask",
+  release_batch:"never",
+  update_lims_status:"never"
+};
+const FLOOR = 0.70;
+
+function evaluate(d){
+  const perm = POLICY[d.action] || "never";
+  if(perm === "never")
+    return {permission:"never", allowed:false, note:"GxP-critical or unknown action — routed to human, never auto."};
+  if(perm === "ask")
+    return {permission:"ask", allowed:false, note:"Queued for QA / scientist approval before any write."};
+  if(d.confidence < FLOOR)
+    return {permission:"ask", allowed:false, note:`Confidence ${d.confidence.toFixed(2)} below floor ${FLOOR.toFixed(2)} — escalated to human.`};
+  return {permission:"auto", allowed:true, note:"Read-only and confident — auto-executed."};
+}
+
+function execute(d){
+  if(d.action === "generate_summary")
+    return `Summary generated for ${d.target}: 23/24 samples in spec; S-18 peak ratio 0.94 (limit 0.95) — flagged in report.`;
+  if(d.action === "query_lims_status")
+    return `LIMS query: ${d.target} status = HOLD (pending QA review). No state change.`;
+  throw new Error("No executor — refusing side effect.");
+}
+
+function fnv1a(str){
+  let h = 0x811c9dc5;
+  for(let i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); }
+  return (h>>>0).toString(16).padStart(8,"0");
+}
+const GENESIS = "00000000";
+let audit = [];
+
+function auditAppend(request_id, event, data){
+  const ts = (audit.length ? audit[audit.length-1].ts : 1718000000) + 1;
+  const prev = audit.length ? audit[audit.length-1].row_hash : GENESIS;
+  const body = JSON.stringify(data);
+  const row_hash = fnv1a(`${ts}|${request_id}|${event}|${body}|${prev}`);
+  audit.push({seq:audit.length+1, ts, request_id, event, data:body, prev_hash:prev, row_hash});
+}
+
+function verifyChain(){
+  let prev = GENESIS;
+  for(const r of audit){
+    if(r.prev_hash !== prev) return false;
+    if(fnv1a(`${r.ts}|${r.request_id}|${r.event}|${r.data}|${prev}`) !== r.row_hash) return false;
+    prev = r.row_hash;
+  }
+  return true;
+}
+
+const presets = [
+  ["Summarize batch","Summarize chromatography results for batch B-2047",ANALYST],
+  ["Release batch","Batch B-2047 passed QC — release it for shipment",ANALYST],
+  ["Flag anomaly","Sample S-18 peak ratio looks off-spec — flag for QA review",ANALYST],
+  ["ELN entry","Log today's deviation note for batch B-2047 in the ELN",ANALYST],
+  ["LIMS query","What's the current hold status on batch B-2047 in LIMS?",ANALYST],
+];
+let reqCounter = 0;
+let lastAnalyst = ANALYST;
+
+const $ = id => document.getElementById(id);
+const chipsEl = $("chips");
+presets.forEach(([label,text,who])=>{
+  const c = document.createElement("button");
+  c.className="chip"; c.textContent=label;
+  c.onclick=()=>{ $("msg").value=text; lastAnalyst=who; };
+  chipsEl.appendChild(c);
+});
+
+function setStep(el, html){ $(el).querySelector(".body").innerHTML = html; $(el).classList.add("show"); }
+function resetSteps(){ ["st1","st2","st3","st4"].forEach(s=>$(s).classList.remove("show")); }
+function esc(s){ return String(s).replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m])); }
+
+function renderJSON(d){
+  return `<pre class="json">{
+  "action": "${d.action}",
+  "target": "${esc(d.target)}",
+  "reason": "${esc(d.reason)}",
+  "confidence": ${d.confidence},
+  "payload": ${esc(JSON.stringify(d.payload))}
+}</pre>`;
+}
+
+function renderAudit(){
+  if(!audit.length){ $("audittable").style.display="none"; $("auditempty").style.display="block"; return; }
+  $("auditempty").style.display="none"; $("audittable").style.display="table";
+  $("auditbody").innerHTML = audit.map(r=>
+    `<tr data-seq="${r.seq}"><td>${r.seq}</td><td class="ev">${r.event}</td><td class="hash">${r.row_hash}</td></tr>`
+  ).join("");
+}
+
+async function runAgent(){
+  const msg = $("msg").value.trim();
+  if(!msg) { $("msg").focus(); return; }
+  $("run").disabled = true;
+  resetSteps();
+  $("verifyout").className="verify"; $("verifyout").textContent="";
+
+  reqCounter++;
+  const rid = "lab-" + String(reqCounter).padStart(3,"0");
+  const analyst = lastAnalyst;
+  const wait = ms => new Promise(r=>setTimeout(r,ms));
+
+  await wait(120);
+  setStep("st1", `<code>${rid}</code> from <b>${esc(analyst)}</b> · batch <b>${BATCH}</b><br><span style="color:#64748b">"${esc(msg)}"</span>`);
+  auditAppend(rid,"received",{channel:"lab_portal",analyst,batch:BATCH,message:msg}); renderAudit();
+
+  await wait(520);
+  const decision = mockDecide(msg, analyst);
+  setStep("st2", `The model suggested a lab action. We don't trust it yet — we validate and gate it.${renderJSON(decision)}`);
+  auditAppend(rid,"decided",decision); renderAudit();
+
+  await wait(520);
+  const v = evaluate(decision);
+  const rule = `POLICY["${decision.action}"] → ${v.permission.toUpperCase()}` +
+    (POLICY[decision.action]==="auto" ? `  ·  confidence ${decision.confidence} ${decision.confidence<FLOOR?"<":"≥"} ${FLOOR}` : "");
+  setStep("st3", `<span class="pill ${v.permission}">${v.permission}</span> ${esc(v.note)}<div class="gaterule">${esc(rule)}</div>`);
+  auditAppend(rid,"gated",v); renderAudit();
+
+  await wait(420);
+  if(v.allowed){
+    const result = execute(decision);
+    setStep("st4", `<div class="outcome exec"><span class="badge exec">executed</span> Read-only action completed</div><div class="body">${esc(result)}</div>`);
+    auditAppend(rid,"executed",{result});
+  } else {
+    const isBlock = v.permission==="never";
+    setStep("st4", `<div class="outcome ${isBlock?"block":"hold"}"><span class="badge ${isBlock?"block":"hold"}">${isBlock?"blocked":"queued"}</span> ${isBlock?"Human-only — batch release / LIMS writes":"Waiting for QA approval"}</div><div class="body">No side effect happened. ${esc(v.note)}</div>`);
+    auditAppend(rid,"queued",{note:v.note});
+  }
+  renderAudit();
+  $("run").disabled = false;
+}
+
+$("run").onclick = runAgent;
+$("msg").addEventListener("keydown", e=>{ if(e.key==="Enter" && (e.metaKey||e.ctrlKey)) runAgent(); });
+
+$("verify").onclick = ()=>{
+  if(!audit.length){ return; }
+  const ok = verifyChain();
+  const out = $("verifyout");
+  out.className = "verify " + (ok?"ok":"bad");
+  out.textContent = ok ? "✓ chain intact — every hash links to the previous row" : "✗ chain BROKEN — a row was altered after it was written";
+};
+
+$("tamper").onclick = ()=>{
+  if(!audit.length){ return; }
+  const i = Math.floor(audit.length/2);
+  audit[i].data = JSON.stringify({note:"silently edited"});
+  const rows = $("auditbody").querySelectorAll("tr");
+  if(rows[i]) rows[i].classList.add("tampered");
+  const out = $("verifyout");
+  out.className="verify"; out.textContent="";
+};
+</script>
+</body>
+</html>
