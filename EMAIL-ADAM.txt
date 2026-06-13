@@ -4,7 +4,7 @@ Looking forward to our conversation on Tuesday the 23rd at 11:00 CET.
 
 I put together a short lab-scenario demo to give some context ahead of time — same architecture I use in regulated environments (the model proposes, the system decides, full audit trail), applied to a fictional QC workflow:
 
-Demo (interactive, ~2 min to click through): DEPLOY_URL
+Demo (interactive, ~2 min to click through): https://ainoafv.github.io/regulated-lab-agent-demo/
 Walkthrough (Loom, ~6 min): LOOM_URL
 
 Happy to go deeper on our call. If you had a chance to watch, we can skip the basics and focus on your questions.

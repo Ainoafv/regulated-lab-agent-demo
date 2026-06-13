@@ -1,6 +1,6 @@
 # Loom script — Adam Collins / Thermo Fisher (target 6 min)
 
-> Interactive demo: **DEPLOY_URL** (update after GitHub Pages deploy)
+> Interactive demo: https://ainoafv.github.io/regulated-lab-agent-demo/
 > Portfolio (generic agent demo): https://ainoafv.github.io/agent-engineering-demo/
 
 Record **screen + voice**. One window: the lab demo in the browser. Calm pace, no rush. English.
