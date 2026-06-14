@@ -5,7 +5,9 @@
 
 Record **screen + voice**. One window: the lab demo in the browser. Calm pace, no rush. English.
 
-Send to Adam 2–3 days before **Tuesday 23 Jun 2026, 11:00 CET** (e.g. Sunday 15 or Monday 16 Jun).
+Send to Adam 2-3 days before **Tuesday 23 Jun 2026, 11:00 CET** (e.g. Sunday 15 or Monday 16 Jun).
+
+**Framing:** this is a *technical-sales* walkthrough, not an engineering deep-dive. You're showing how you'd run a customer conversation about governed AI in a lab — speed for scientists, control for QA, safe integration for IT. Keep the **Business view** on for most of it; flip to **Technical view** once, briefly, for Adam (PhD).
 
 ---
 
@@ -13,60 +15,63 @@ Send to Adam 2–3 days before **Tuesday 23 Jun 2026, 11:00 CET** (e.g. Sunday 1
 
 "Hi Adam, Ainoa here — looking forward to our conversation on Tuesday the 23rd.
 
-After we rescheduled, I put together a short interactive demo for context: a fictional QC lab scenario that shows how I'd approach AI in a regulated lab environment. Not Thermo software — just the architecture I'd bring to digital science workflows. About six minutes — feel free to click through the demo yourself afterward."
+After we rescheduled, I put together a short interactive demo for context: a fictional QC lab scenario showing how I'd frame a customer conversation about AI in a regulated lab. Not Thermo software — just the way I'd walk a lab through it. About six minutes — feel free to click through it yourself afterward."
 
-## 0:20 — The problem (40s)
+## 0:20 — The problem, in customer language (40s)
 
-"In labs — and in clinical AI, which is what I do day-to-day — the risk isn't the model being wrong once. It's the model triggering a side effect you can't undo: releasing a batch, writing to an ELN, changing LIMS status.
+"When a lab asks 'can AI help us?', the real question underneath is 'can we trust it not to do something we can't undo' — release a batch, change a LIMS status, write to the ELN.
 
-So the pattern I use is simple: **the model proposes, the code decides**. The LLM never touches LIMS, ELN, or batch release directly."
+So the way I'd answer that in a sales conversation is: **the model proposes, the code decides.** The AI can suggest an action, but a permission policy decides what runs, what waits for a human, and what is never automated."
 
-## 1:00 — Show the demo layout (30s)
+## 1:00 — The guided scenario (the spine of the demo) (30s)
 
-Scroll the page briefly. Point at the context bar:
+Point at the top bar.
 
-"QC lab, batch B-2047, on hold in LIMS, one sample off-spec. The scientist types a request — or uses a preset chip."
+"I built a 90-second guided story for exactly this conversation. Same batch, B-2047, on hold in LIMS, one sample off-spec. I'll hit **Play customer scenario** and narrate."
 
-## 1:30 — Scenario 1: read-only AUTO (60s)
+Click **Play customer scenario**. Let the narration band drive. Talk over each scene:
 
-Click **Summarize batch** → **Run lab agent**.
+## 1:30 — Scene 1: Speed for the scientist (45s)
 
-Walk through the four steps:
+(Summarize → AUTO)
 
-1. Request received — analyst, batch ID logged  
-2. LLM proposes `generate_summary` — label it **untrusted model output**  
-3. Gate: `POLICY → AUTO`, confidence above floor  
-4. Outcome: executed — read-only summary, no LIMS change  
+"Scene one. A scientist asks for a QC summary. It's read-only, low risk — so the AI just answers, instantly. No queue, no friction. That's the **scientist** win: speed. Note the stakeholder card on the right lights up — Scientist owns this one."
 
-"Summaries and LIMS queries are low risk — auto if confident. Still logged."
+## 2:15 — Scene 2: Control for QA (60s)
 
-## 2:30 — Scenario 2: NEVER — batch release (60s)
+(Release → NEVER)
 
-Click **Release batch** → Run.
+"Scene two — the one that wins the room. The hard question every QA director asks: 'Can the AI release my batch?' The model even understands the request and is 92% confident.
 
-"This is the important one. The model correctly understands 'release for shipment' and proposes `release_batch` with high confidence — 0.92.
+And the policy says **NEVER**. Batch release is human-only, full stop — no side effect, fail-closed by design. That's the **QA** win: control. A confident model still doesn't get to release a batch."
 
-But the gate says **NEVER**. Batch release is human-only, full stop. No side effect. Queued/blocked. That's fail-closed by design — even a confident model doesn't get to release a batch."
+## 3:15 — Scene 3: Human in the loop + audit (60s)
 
-## 3:30 — Scenario 3: ASK — anomaly flag (45s)
+(Flag → ASK, then audit)
 
-Click **Flag anomaly** → Run.
+"Scene three. An off-spec sample needs flagging — that writes to the quality record, so it's not blocked, it's **queued for QA**. Supervised, not stopped.
 
-"Flagging an off-spec sample is a write to the quality record — so it's **ASK**: queue for QA before anything hits the ELN. Human in the loop, not because the model is dumb, but because the policy says so."
+Now the right column — the audit log. Every step is recorded, and each row is hashed to the one before it. I'll click **Tamper a row**, then **Verify chain** — broken. That's the compliance story you can show an auditor: prove what the system did, detect any edit after the fact."
 
-## 4:15 — Audit trail (60s)
+## 4:15 — Three stakeholders, one workflow (45s)
 
-Point at the audit log on the right.
+Scroll to the stakeholder panel.
 
-"Every step — received, decided, gated, executed or queued — goes into an append-only log. Each row hashes the previous one.
+"This is really the whole sales argument on one screen: the same workflow has to satisfy three people. **Scientist** wants speed. **QA** wants control. **IT** wants integration that doesn't break LIMS or open a hole — a closed action set, policy in code, fail-closed. The demo serves all three without picking a loser."
 
-Click **Tamper a row** — simulates someone editing history after the fact. Then **Verify chain** — broken. That's the compliance story: you can prove what the system did and detect tampering."
+## 5:00 — One look under the hood (30s)
 
-## 5:15 — Bridge to Thermo + close (45s)
+Flip the toggle to **Technical view**, re-run Release (or scroll the last result).
 
-"I built this as a neutral QC scenario, but the architecture maps directly to what you described — lab digitalization, LIMS-adjacent workflows, scientists getting AI assistance without losing control or traceability.
+"For completeness — if I flip to Technical view, you see the actual proposed action as JSON and the policy rule that gated it. That depth is there when the customer's IT or quality team wants it, but I'd keep the conversation in business terms by default."
 
-Same patterns I run in production regulated AI — closed action set, permission table in code not prompts, hash-chained audit.
+Flip back to **Business view**.
+
+## 5:30 — Bridge to Thermo + close (45s)
+
+"I built this as a neutral QC scenario, but it maps directly to what Cristina and I discussed — digital science, LIMS-adjacent workflows, scientists getting AI assistance without losing control or traceability.
+
+To be clear on where I'm coming from: I run these patterns in production regulated AI, and I'm coming up to speed on the lab-informatics side. This is how I'd support those customer conversations.
 
 Happy to go deeper on Tuesday — and I'd love to understand the format you use for the case presentation in the next stage. Thanks, Adam."
 
@@ -74,11 +79,11 @@ Happy to go deeper on Tuesday — and I'd love to understand the format you use 
 
 ## Recording tips
 
-- **Don't** mention SERGAS by name or show clinical systems — say "regulated clinical AI" once.  
-- **Don't** claim SampleManager / Connect / Momentum experience — say "LIMS-adjacent" and "fictional scenario".  
-- Run 3 presets in order (Summarize → Release → Flag) — that's the narrative arc.  
-- Optional 4th: ELN entry (ASK) if you have time.  
-- End frame: audit log with intact chain after Verify.  
+- **Don't** mention SERGAS by name or show clinical systems — say "regulated clinical AI" once.
+- **Don't** claim SampleManager / Connect / Momentum experience — say "LIMS-adjacent", "coming up to speed", "fictional scenario".
+- Let **Play customer scenario** carry the narrative — you talk over it, you don't click step by step.
+- Flip to **Technical view** exactly once, then back. Don't live in the JSON.
+- End frame: stakeholder panel or audit log with intact chain after Verify.
 - Upload Loom → paste link in email to Adam (see `EMAIL-ADAM.txt`).
 
 ## Email timing

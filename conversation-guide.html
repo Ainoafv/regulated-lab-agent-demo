@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Governed AI in QC Labs — a conversation guide</title>
+<style>
+  @page{size:A4;margin:14mm 15mm}
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --ink:#0f172a;--accent:#0369a1;--mute:#64748b;--rule:#e2e8f0;
+    --green:#059669;--amber:#b45309;--red:#dc2626;--lab:#1e3a5f;--soft:#eff6ff;
+  }
+  body{font-family:-apple-system,"Helvetica Neue",Arial,sans-serif;color:#334155;font-size:10.3px;line-height:1.42}
+  .kicker{font-size:8.5px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--accent)}
+  h1{font-size:19px;font-weight:800;color:var(--ink);letter-spacing:-.3px;margin:3px 0 4px}
+  h1 .a{color:var(--accent)}
+  .lede{font-size:10.5px;color:var(--mute);max-width:165mm}
+  .hr{height:2px;background:linear-gradient(90deg,var(--accent),#bfdbfe 60%,transparent);margin:9px 0 11px;border-radius:2px}
+  h2{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink);margin:0 0 6px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .principle{background:var(--soft);border:1px solid #bfdbfe;border-radius:9px;padding:9px 12px;margin-bottom:11px}
+  .principle b{color:var(--accent);font-size:11px}
+  .acts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:11px}
+  .act{border:1px solid var(--rule);border-radius:9px;padding:9px 10px}
+  .act .tag{font-size:7.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;border-radius:5px;padding:2px 6px;display:inline-block}
+  .tag.auto{background:#dcfce7;color:var(--green)}
+  .tag.never{background:#fee2e2;color:var(--red)}
+  .tag.ask{background:#fef3c7;color:var(--amber)}
+  .act .q{font-weight:700;color:var(--ink);margin:6px 0 3px;font-size:10px}
+  .act .a{color:var(--mute);font-size:9.3px}
+  table{width:100%;border-collapse:collapse;font-size:9.2px}
+  th{text-align:left;font-size:7.6px;text-transform:uppercase;letter-spacing:.6px;color:var(--mute);border-bottom:1.5px solid var(--rule);padding:4px 6px}
+  td{padding:5px 6px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+  td.role{font-weight:700;color:var(--ink);white-space:nowrap}
+  .pill{font-size:7.5px;font-weight:800;border-radius:5px;padding:2px 6px;text-transform:uppercase;letter-spacing:.4px}
+  .pill.auto{background:#dcfce7;color:var(--green)}
+  .pill.ask{background:#fef3c7;color:var(--amber)}
+  .pill.never{background:#fee2e2;color:var(--red)}
+  .policy td:first-child{font-weight:600;color:var(--ink)}
+  .audit{background:#0f172a;color:#e2e8f0;border-radius:9px;padding:10px 12px;font-size:9.3px}
+  .audit b{color:#7dd3fc}
+  .foot{margin-top:11px;border-top:1px solid var(--rule);padding-top:8px;display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+  .foot .fic{font-size:8.6px;color:var(--mute);max-width:120mm}
+  .foot .who{font-size:9px;color:var(--ink);text-align:right}
+  .foot .who b{display:block;font-size:10px}
+  a{color:var(--accent);text-decoration:none}
+  .mt{margin-top:11px}
+</style>
+</head>
+<body>
+  <div class="kicker">Technical sales · digital science &amp; automation</div>
+  <h1>Governed AI in a QC lab — <span class="a">a conversation guide</span></h1>
+  <p class="lede">A one-page version of the interactive demo: how to talk a lab through AI assistance without giving up control of GxP-critical decisions. Fictional QC scenario (batch B-2047, HPLC, on hold) — not Thermo Fisher software.</p>
+  <div class="hr"></div>
+
+  <div class="principle">
+    <b>The principle: the model proposes, the code decides.</b><br>
+    The AI can <i>suggest</i> an action. A permission policy enforced in code — not in prompts — decides what runs automatically, what waits for a human, and what is never automated. Even a highly confident model never triggers an irreversible side effect on its own.
+  </div>
+
+  <h2>The customer scenario, in three scenes</h2>
+  <div class="acts">
+    <div class="act">
+      <span class="tag auto">Auto · speed</span>
+      <div class="q">"Summarize the QC results."</div>
+      <div class="a">Read-only and low risk. The AI answers instantly — no queue. The scientist gets speed.</div>
+    </div>
+    <div class="act">
+      <span class="tag never">Never · control</span>
+      <div class="q">"Can the AI release my batch?"</div>
+      <div class="a">Model is 92% confident — policy still says NEVER. Batch release is human-only, fail-closed. QA keeps control.</div>
+    </div>
+    <div class="act">
+      <span class="tag ask">Ask · oversight</span>
+      <div class="q">"Flag this off-spec sample."</div>
+      <div class="a">This writes to the quality record, so it is queued for QA review. Supervised, not blocked.</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h2>The permission policy</h2>
+      <table class="policy">
+        <thead><tr><th>Action</th><th>Decision</th></tr></thead>
+        <tbody>
+          <tr><td>Summarize results · query LIMS</td><td><span class="pill auto">auto</span></td></tr>
+          <tr><td>Flag anomaly · write ELN entry</td><td><span class="pill ask">ask</span></td></tr>
+          <tr><td>Release batch · change LIMS status</td><td><span class="pill never">never</span></td></tr>
+          <tr><td>Unknown / unexpected action</td><td><span class="pill never">never</span></td></tr>
+        </tbody>
+      </table>
+      <p class="a" style="font-size:8.6px;color:var(--mute);margin-top:5px">Fail-closed by default. Auto actions also require model confidence &ge; 0.70, or they escalate to a human.</p>
+    </div>
+    <div>
+      <h2>One workflow, three stakeholders</h2>
+      <table>
+        <thead><tr><th>Stakeholder</th><th>What they get</th></tr></thead>
+        <tbody>
+          <tr><td class="role">Scientist</td><td>Speed — self-serve read-only answers, no friction.</td></tr>
+          <tr><td class="role">QA &amp; Compliance</td><td>Control — human sign-off on every write and every GxP-critical action.</td></tr>
+          <tr><td class="role">IT</td><td>Safe integration — closed action set, policy in code, fail-closed.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="audit mt">
+    <b>The compliance story.</b> Every step — received, proposed, gated, executed or queued — lands in an append-only log, and each row is hashed to the one before it. Edit history after the fact and the chain breaks on verification. You can prove what the system did and detect tampering.
+  </div>
+
+  <div class="foot">
+    <div class="fic"><b>Fictional QC scenario — not Thermo Fisher software.</b> Same architecture used in production regulated clinical AI: closed action set, fail-closed permission policy, hash-chained audit. Interactive demo: ainoafv.github.io/regulated-lab-agent-demo</div>
+    <div class="who"><b>Ainoa Figueroa Vidal</b>Governed AI for regulated lab workflows</div>
+  </div>
+</body>
+</html>

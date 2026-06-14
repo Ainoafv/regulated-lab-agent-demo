@@ -35,11 +35,18 @@ git push -u origin main
 
 | File | Purpose |
 |------|---------|
-| `web/index.html` | Interactive demo |
+| `web/index.html` | Interactive demo (root `index.html` is an identical copy for GitHub Pages) |
+| `conversation-guide.html` / `.pdf` | One-page pre-sales conversation guide (attach the PDF to the email) |
 | `LOOM-SCRIPT.md` | 6 min Loom walkthrough for Adam |
 | `INTERVIEW-PREP.md` | Call prep (Spanish) |
 | `EMAIL-ADAM.txt` | Email template |
 | `clients/thermo/CONTEXT.md` | Process tracking |
+
+## Demo features
+
+- **Play customer scenario** — 90s auto-play guided story (speed → control → human-in-the-loop) with a narration band in business language.
+- **Business / Technical view toggle** — Business hides the JSON and gate rules; Technical reveals them for a deeper audience.
+- **Stakeholder map** — Scientist / QA & Compliance / IT; the owner of the current action lights up.
 
 ## Scenarios (preset chips)
 
@@ -48,3 +55,13 @@ git push -u origin main
 3. **Flag anomaly** → `flag_anomaly` → ASK  
 4. **ELN entry** → `write_eln_entry` → ASK  
 5. **LIMS query** → `query_lims_status` → AUTO  
+6. **Update LIMS status** → `update_lims_status` → NEVER  
+
+## Regenerate the PDF
+
+```bash
+/Applications/"Google Chrome.app"/Contents/MacOS/"Google Chrome" \
+  --headless --disable-gpu --no-pdf-header-footer \
+  --print-to-pdf="$(pwd)/conversation-guide.pdf" \
+  "file://$(pwd)/conversation-guide.html"
+```

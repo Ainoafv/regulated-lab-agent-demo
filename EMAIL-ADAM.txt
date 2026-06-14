@@ -2,12 +2,15 @@ Hi Adam,
 
 Looking forward to our conversation on Tuesday the 23rd at 11:00 CET.
 
-I put together a short lab-scenario demo to give some context ahead of time — same architecture I use in regulated environments (the model proposes, the system decides, full audit trail), applied to a fictional QC workflow:
+Ahead of time I put together a short, interactive walkthrough of how I'd frame a customer conversation about AI in a QC lab: the model can propose actions, but a permission policy in code decides what runs, what waits for a human, and what is never automated (e.g. batch release). Fictional scenario, not Thermo software.
 
-Demo (interactive, ~2 min to click through): https://ainoafv.github.io/regulated-lab-agent-demo/
+There's a "Play customer scenario" button that runs a 90-second guided story, and a Business/Technical toggle if you want to look under the hood:
+
+Demo (interactive, ~2 min): https://ainoafv.github.io/regulated-lab-agent-demo/
 Walkthrough (Loom, ~6 min): LOOM_URL
+One-page summary (PDF) attached.
 
-Happy to go deeper on our call. If you had a chance to watch, we can skip the basics and focus on your questions.
+Happy to go deeper on our call. If you've had a chance to look, we can skip the basics and focus on your questions.
 
 Best regards,
 Ainoa Figueroa Vidal
