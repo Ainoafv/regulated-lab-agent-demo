@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Regulated Lab Agent — the model proposes, the code decides</title>
+<title>Governed AI in a QC lab — a conversation aid for technical sales</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
   :root{
     --ink:#0f172a; --accent:#0369a1; --accent2:#1d4ed8;
     --green:#059669; --amber:#b45309; --red:#dc2626;
@@ -13,28 +13,52 @@
     --lab:#1e3a5f;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:Inter,system-ui,sans-serif;color:#334155;background:var(--bg);line-height:1.45;padding:24px 16px 60px}
+  body{font-family:Inter,system-ui,sans-serif;color:#334155;background:radial-gradient(1200px 480px at 50% -120px,#e7eef7 0%,var(--bg) 60%);line-height:1.45;padding:24px 16px 60px;min-height:100vh}
   .wrap{max-width:1180px;margin:0 auto}
-  header{text-align:center;margin-bottom:18px}
-  h1{font-family:"Inter Tight";font-weight:800;font-size:clamp(20px,3.4vw,30px);color:var(--ink);letter-spacing:-.4px}
+  header{text-align:center;margin-bottom:14px}
+  .kicker{font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+  h1{font-family:"Inter Tight";font-weight:800;font-size:clamp(21px,3.4vw,31px);color:var(--ink);letter-spacing:-.4px}
   h1 .accent{color:var(--accent)}
-  .sub{color:var(--mute);font-size:14px;margin-top:6px;max-width:720px;margin-left:auto;margin-right:auto}
+  .sub{color:var(--mute);font-size:14px;margin-top:8px;max-width:760px;margin-left:auto;margin-right:auto}
   .byline{font-size:12px;color:var(--mute);margin-top:8px}
-  .ctxbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0 20px}
-  .ctx{font-size:11.5px;font-weight:600;background:var(--lab);color:#e2e8f0;border-radius:8px;padding:6px 12px;letter-spacing:.2px}
+  .ctxbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0 6px}
+  .ctx{font-size:11.5px;font-weight:600;background:var(--lab);color:#e2e8f0;border-radius:8px;padding:6px 12px;letter-spacing:.2px;display:flex;align-items:center;gap:6px}
   .ctx span{color:#93c5fd}
+  .ctx .ic{opacity:.8}
+
+  /* toolbar: guided tour + view toggle */
+  .toolbar{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:12px 16px;margin:16px 0 14px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .tour{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .play{border:none;background:var(--accent);color:#fff;font-family:"Inter Tight";font-weight:700;font-size:14px;padding:10px 16px;border-radius:10px;cursor:pointer;transition:.12s;display:inline-flex;align-items:center;gap:8px}
+  .play:hover{background:#075985}
+  .play:disabled{opacity:.55;cursor:not-allowed}
+  .play .tri{font-size:11px}
+  .tourhint{font-size:12px;color:var(--mute);max-width:320px}
+  .viewtog{display:flex;align-items:center;gap:8px}
+  .viewtog .lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mute)}
+  .seg{display:inline-flex;background:#f1f5f9;border:1px solid var(--rule);border-radius:10px;padding:3px}
+  .seg button{border:none;background:transparent;font-family:Inter;font-weight:700;font-size:12.5px;color:var(--mute);padding:6px 14px;border-radius:8px;cursor:pointer;transition:.12s}
+  .seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(15,23,42,.12)}
+
+  /* narration band for guided tour */
+  .narr{display:none;align-items:flex-start;gap:12px;background:linear-gradient(90deg,#0f2942,#1e3a5f);color:#e8f0fb;border-radius:14px;padding:14px 18px;margin-bottom:14px;box-shadow:0 6px 18px rgba(15,42,66,.25)}
+  .narr.show{display:flex}
+  .narr .act{flex:0 0 auto;font-family:"Inter Tight";font-weight:800;font-size:11px;letter-spacing:.6px;text-transform:uppercase;background:rgba(147,197,253,.18);color:#bfdbfe;border-radius:8px;padding:5px 10px;margin-top:1px}
+  .narr .ntext{font-size:14.5px;font-weight:500}
+  .narr .ntext b{color:#fff;font-weight:700}
+
   .grid{display:grid;grid-template-columns:320px 1fr 340px;gap:16px;align-items:start}
   @media(max-width:980px){.grid{grid-template-columns:1fr}}
   .card{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:16px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
   .card h2{font-family:"Inter Tight";font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink);margin-bottom:10px}
   label{font-size:12px;font-weight:600;color:var(--mute);display:block;margin-bottom:6px}
-  textarea{width:100%;min-height:84px;resize:vertical;border:1px solid var(--rule);border-radius:10px;padding:10px;font-family:Inter;font-size:14px;color:var(--ink)}
+  textarea{width:100%;min-height:74px;resize:vertical;border:1px solid var(--rule);border-radius:10px;padding:10px;font-family:Inter;font-size:14px;color:var(--ink)}
   textarea:focus{outline:none;border-color:var(--accent)}
   .chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
   .chip{font-size:12px;border:1px solid var(--rule);background:#f8fafc;color:#475569;border-radius:999px;padding:5px 10px;cursor:pointer;transition:.12s}
   .chip:hover{border-color:var(--accent);color:var(--accent);background:var(--soft)}
-  .run{margin-top:12px;width:100%;border:none;background:var(--accent);color:#fff;font-family:"Inter Tight";font-weight:700;font-size:15px;padding:11px;border-radius:10px;cursor:pointer;transition:.12s}
-  .run:hover{background:#075985}
+  .run{margin-top:12px;width:100%;border:none;background:var(--ink);color:#fff;font-family:"Inter Tight";font-weight:700;font-size:15px;padding:11px;border-radius:10px;cursor:pointer;transition:.12s}
+  .run:hover{background:#1e293b}
   .run:disabled{opacity:.5;cursor:not-allowed}
   .legend{margin-top:14px;font-size:11.5px;color:var(--mute)}
   .legend b{color:var(--ink)}
@@ -76,23 +100,66 @@
   .lims dt:first-child{margin-top:0}
   .lims dd{color:var(--ink);margin:2px 0 0}
   .hold{color:var(--amber);font-weight:600}
+
+  /* stakeholders panel */
+  .stake{margin-top:16px}
+  .stakehead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+  .stakehead h2{font-family:"Inter Tight";font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink)}
+  .stakehead p{font-size:12px;color:var(--mute)}
+  .stakegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:760px){.stakegrid{grid-template-columns:1fr}}
+  .sh{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:14px 16px;transition:.2s;position:relative}
+  .sh .role{font-family:"Inter Tight";font-weight:800;font-size:14px;color:var(--ink);display:flex;align-items:center;gap:8px}
+  .sh .ic{font-size:16px}
+  .sh .want{font-size:12.5px;color:var(--mute);margin-top:6px}
+  .sh .ctrl{font-size:11.5px;margin-top:9px;color:#475569;border-top:1px dashed var(--rule);padding-top:8px}
+  .sh .ctrl b{color:var(--ink)}
+  .sh .owner{position:absolute;top:12px;right:12px;font-size:9.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--accent);background:var(--soft);border:1px solid #bfdbfe;border-radius:999px;padding:2px 8px;opacity:0;transition:.2s}
+  .sh.active{border-color:var(--accent);box-shadow:0 6px 18px rgba(3,105,161,.16);transform:translateY(-2px)}
+  .sh.active .owner{opacity:1}
+
   footer{text-align:center;color:var(--mute);font-size:12px;margin-top:26px;line-height:1.7}
+  footer .fic{font-weight:600;color:#475569}
   code{font-family:"JetBrains Mono",monospace;font-size:11.5px;background:#f1f5f9;padding:1px 5px;border-radius:4px}
+
+  /* view modes */
+  body.mode-business .tech-only{display:none !important}
+  body.mode-technical .biz-only{display:none}
 </style>
 </head>
-<body>
+<body class="mode-business">
 <div class="wrap">
   <header>
-    <h1>Regulated Lab Agent — <span class="accent">the model proposes, the code decides</span></h1>
-    <p class="sub">A QC lab scenario: a scientist asks for help with batch B-2047. The AI agent <em>proposes</em> an action — summarize results, query LIMS, flag an anomaly, write an ELN entry, or release a batch. A permission gate <em>decides</em> what can run. Every step lands in a tamper-evident audit trail. Fictional workflow — not Thermo Fisher software.</p>
+    <div class="kicker">Technical sales · digital science &amp; automation</div>
+    <h1>Can AI help in a QC lab <span class="accent">without ever releasing a batch on its own?</span></h1>
+    <p class="sub">A walkthrough I'd use in a customer conversation: a scientist asks an AI assistant for help with batch B-2047. The model can <em>propose</em> actions — but a permission policy in code decides what runs, what waits for a human, and what is never automated. Every step is logged and tamper-evident. Fictional scenario — not Thermo Fisher software.</p>
     <div class="ctxbar">
-      <div class="ctx">QC Lab · <span>HPLC</span></div>
-      <div class="ctx">Batch · <span>B-2047</span></div>
-      <div class="ctx">LIMS status · <span>hold</span> — pending QA review</div>
-      <div class="ctx">Analyst · <span>Dr. Rivera</span></div>
+      <div class="ctx"><span class="ic">&#9879;</span>QC Lab · <span>HPLC</span></div>
+      <div class="ctx"><span class="ic">&#9783;</span>Batch · <span>B-2047</span></div>
+      <div class="ctx"><span class="ic">&#9888;</span>LIMS status · <span>hold</span> — pending QA review</div>
+      <div class="ctx"><span class="ic">&#9823;</span>Analyst · <span>Dr. Rivera</span></div>
     </div>
-    <p class="byline">Built by Ainoa Figueroa Vidal · lab digitalization &amp; regulated AI patterns · interactive demo, no install</p>
+    <p class="byline">Built by Ainoa Figueroa Vidal · governed AI for regulated lab workflows · interactive, no install</p>
   </header>
+
+  <div class="toolbar">
+    <div class="tour">
+      <button class="play" id="play"><span class="tri">&#9654;</span> Play customer scenario</button>
+      <span class="tourhint">90-second guided story: a helpful summary, a release the AI is <b>not</b> allowed to do, and a flag that waits for QA.</span>
+    </div>
+    <div class="viewtog">
+      <span class="lbl">View</span>
+      <div class="seg">
+        <button id="viewBiz" class="on">Business</button>
+        <button id="viewTech">Technical</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="narr" id="narr">
+    <span class="act" id="narrAct">Scene</span>
+    <span class="ntext" id="narrText"></span>
+  </div>
 
   <div class="grid">
     <div class="card">
@@ -100,7 +167,7 @@
       <label for="msg">Pretend you're a QC analyst. Ask anything about the batch:</label>
       <textarea id="msg" placeholder="e.g. Summarize chromatography results for batch B-2047"></textarea>
       <div class="chips" id="chips"></div>
-      <button class="run" id="run">Run lab agent →</button>
+      <button class="run" id="run">Run lab agent &rarr;</button>
       <dl class="lims">
         <dt>LIMS snapshot (read-only)</dt>
         <dd>Batch B-2047 · 24 samples · HPLC purity run</dd>
@@ -111,26 +178,26 @@
       </dl>
       <div class="legend">
         <p style="margin-bottom:6px"><b>Permission policy</b> (enforced in code, not prompts):</p>
-        <p><span class="pill auto">auto</span> generate_summary, query_lims — read-only, low risk</p>
-        <p style="margin-top:4px"><span class="pill ask">ask</span> flag_anomaly, write_eln_entry — human review before write</p>
-        <p style="margin-top:4px"><span class="pill never">never</span> release_batch, update_lims_status — human only, GxP-critical</p>
-        <p style="margin-top:8px">Unknown action → <b>fail closed</b> (never). AUTO needs confidence ≥ 0.70 or it escalates.</p>
+        <p><span class="pill auto">auto</span> summarize, query LIMS — read-only, low risk</p>
+        <p style="margin-top:4px"><span class="pill ask">ask</span> flag anomaly, write ELN — human review before write</p>
+        <p style="margin-top:4px"><span class="pill never">never</span> release batch, change LIMS status — human only, GxP-critical</p>
+        <p style="margin-top:8px">Unknown action &rarr; <b>fail closed</b> (never). AUTO needs confidence &ge; 0.70 or it escalates.</p>
       </div>
     </div>
 
     <div class="card">
-      <h2>2 · Agent pipeline</h2>
+      <h2>2 · What happens to the request</h2>
       <div class="steps">
         <div class="step s1" id="st1">
           <div class="stitle"><span class="num">1</span> Request received</div>
           <div class="body" id="b1">Waiting for a request…</div>
         </div>
         <div class="step s2" id="st2">
-          <div class="stitle"><span class="num">2</span> LLM proposes <span class="untrusted">model output · untrusted</span></div>
+          <div class="stitle"><span class="num">2</span> AI proposes an action <span class="untrusted tech-only">model output · untrusted</span></div>
           <div class="body" id="b2">—</div>
         </div>
         <div class="step s3" id="st3">
-          <div class="stitle"><span class="num">3</span> Permission gate decides</div>
+          <div class="stitle"><span class="num">3</span> Permission policy decides</div>
           <div class="body" id="b3">—</div>
         </div>
         <div class="step s4" id="st4">
@@ -154,13 +221,41 @@
         <button class="btn danger" id="tamper">Tamper a row</button>
       </div>
       <div class="verify" id="verifyout"></div>
-      <p class="legend" style="margin-top:10px">Each row hashes the one before it (<code>prev_hash</code>). Editing history breaks the chain — try <b>Tamper</b> then <b>Verify</b>.</p>
+      <p class="legend" style="margin-top:10px">The compliance story: every action is logged, and each row is hashed to the one before it (<code>prev_hash</code>). Editing history breaks the chain — try <b>Tamper</b> then <b>Verify</b>.</p>
+    </div>
+  </div>
+
+  <div class="stake">
+    <div class="stakehead">
+      <h2>Who this serves — and who stays in control</h2>
+      <p>The same workflow has to satisfy three stakeholders. The card lit up below owns the current action.</p>
+    </div>
+    <div class="stakegrid">
+      <div class="sh" id="shScientist">
+        <div class="role"><span class="ic">&#128300;</span> Scientist</div>
+        <div class="want">Wants speed: instant summaries and answers, less manual paperwork.</div>
+        <div class="ctrl">Gets <b>self-serve</b> read-only actions. Never blocked by a queue for low-risk work.</div>
+        <div class="owner">Owns this action</div>
+      </div>
+      <div class="sh" id="shQa">
+        <div class="role"><span class="ic">&#128737;</span> QA &amp; Compliance</div>
+        <div class="want">Wants control: no AI touching the quality record or batch disposition unsupervised.</div>
+        <div class="ctrl">Holds <b>human sign-off</b> on every write and every GxP-critical action, with a full audit trail.</div>
+        <div class="owner">Owns this action</div>
+      </div>
+      <div class="sh" id="shIt">
+        <div class="role"><span class="ic">&#128421;</span> IT</div>
+        <div class="want">Wants integration that doesn't break LIMS/ELN or open a security hole.</div>
+        <div class="ctrl">Gets a <b>closed action set</b> and a policy in code — no open-ended writes, fail-closed by default.</div>
+        <div class="owner">Owns this action</div>
+      </div>
     </div>
   </div>
 
   <footer>
+    <span class="fic">Fictional QC scenario — not Thermo Fisher software.</span> Built as a conversation aid for technical sales.<br>
     The model never changes LIMS, ELN, or batch release directly — code decides, humans approve GxP-critical actions, everything is logged.<br>
-    Same architecture I use in regulated clinical AI: closed action set, fail-closed gate, hash-chained audit. Fictional QC scenario for illustration.
+    Same architecture I use in regulated clinical AI: closed action set, fail-closed permission policy, hash-chained audit.
   </footer>
 </div>
 
@@ -196,6 +291,26 @@ const POLICY = {
   update_lims_status:"never"
 };
 const FLOOR = 0.70;
+
+// Plain-English label for each action (business view)
+const ACTION_LABEL = {
+  generate_summary:"Summarize QC results",
+  query_lims_status:"Look up LIMS status",
+  flag_anomaly:"Flag an off-spec sample",
+  write_eln_entry:"Write an ELN entry",
+  release_batch:"Release the batch",
+  update_lims_status:"Change LIMS status"
+};
+
+// Which stakeholder owns / approves each action
+const OWNER = {
+  generate_summary:"scientist",
+  query_lims_status:"scientist",
+  flag_anomaly:"qa",
+  write_eln_entry:"qa",
+  release_batch:"qa",
+  update_lims_status:"qa"
+};
 
 function evaluate(d){
   const perm = POLICY[d.action] || "never";
@@ -248,6 +363,7 @@ const presets = [
   ["Flag anomaly","Sample S-18 peak ratio looks off-spec — flag for QA review",ANALYST],
   ["ELN entry","Log today's deviation note for batch B-2047 in the ELN",ANALYST],
   ["LIMS query","What's the current hold status on batch B-2047 in LIMS?",ANALYST],
+  ["Update LIMS status","Clear the hold and set batch B-2047 to released in LIMS",ANALYST],
 ];
 let reqCounter = 0;
 let lastAnalyst = ANALYST;
@@ -266,7 +382,7 @@ function resetSteps(){ ["st1","st2","st3","st4"].forEach(s=>$(s).classList.remov
 function esc(s){ return String(s).replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m])); }
 
 function renderJSON(d){
-  return `<pre class="json">{
+  return `<pre class="json tech-only">{
   "action": "${d.action}",
   "target": "${esc(d.target)}",
   "reason": "${esc(d.reason)}",
@@ -283,6 +399,17 @@ function renderAudit(){
   ).join("");
 }
 
+function clearOwners(){ ["shScientist","shQa","shIt"].forEach(s=>$(s).classList.remove("active")); }
+function highlightOwner(action){
+  clearOwners();
+  const who = OWNER[action] || "qa";
+  if(who==="scientist") $("shScientist").classList.add("active");
+  else if(who==="qa") $("shQa").classList.add("active");
+  else $("shIt").classList.add("active");
+}
+
+const wait = ms => new Promise(r=>setTimeout(r,ms));
+
 async function runAgent(){
   const msg = $("msg").value.trim();
   if(!msg) { $("msg").focus(); return; }
@@ -293,7 +420,6 @@ async function runAgent(){
   reqCounter++;
   const rid = "lab-" + String(reqCounter).padStart(3,"0");
   const analyst = lastAnalyst;
-  const wait = ms => new Promise(r=>setTimeout(r,ms));
 
   await wait(120);
   setStep("st1", `<code>${rid}</code> from <b>${esc(analyst)}</b> · batch <b>${BATCH}</b><br><span style="color:#64748b">"${esc(msg)}"</span>`);
@@ -301,15 +427,20 @@ async function runAgent(){
 
   await wait(520);
   const decision = mockDecide(msg, analyst);
-  setStep("st2", `The model suggested a lab action. We don't trust it yet — we validate and gate it.${renderJSON(decision)}`);
+  const bizAction = ACTION_LABEL[decision.action] || decision.action;
+  setStep("st2",
+    `<span class="biz-only">The AI suggests: <b>${esc(bizAction)}</b>. We treat that as a request, not a command — it still has to pass the policy.</span>` +
+    `<span class="tech-only">The model suggested a lab action. We don't trust it yet — we validate and gate it.</span>` +
+    renderJSON(decision));
   auditAppend(rid,"decided",decision); renderAudit();
 
   await wait(520);
   const v = evaluate(decision);
   const rule = `POLICY["${decision.action}"] → ${v.permission.toUpperCase()}` +
     (POLICY[decision.action]==="auto" ? `  ·  confidence ${decision.confidence} ${decision.confidence<FLOOR?"<":"≥"} ${FLOOR}` : "");
-  setStep("st3", `<span class="pill ${v.permission}">${v.permission}</span> ${esc(v.note)}<div class="gaterule">${esc(rule)}</div>`);
+  setStep("st3", `<span class="pill ${v.permission}">${v.permission}</span> ${esc(v.note)}<div class="gaterule tech-only">${esc(rule)}</div>`);
   auditAppend(rid,"gated",v); renderAudit();
+  highlightOwner(decision.action);
 
   await wait(420);
   if(v.allowed){
@@ -318,7 +449,12 @@ async function runAgent(){
     auditAppend(rid,"executed",{result});
   } else {
     const isBlock = v.permission==="never";
-    setStep("st4", `<div class="outcome ${isBlock?"block":"hold"}"><span class="badge ${isBlock?"block":"hold"}">${isBlock?"blocked":"queued"}</span> ${isBlock?"Human-only — batch release / LIMS writes":"Waiting for QA approval"}</div><div class="body">No side effect happened. ${esc(v.note)}</div>`);
+    const bizMsg = isBlock
+      ? "Blocked by design — batch release and LIMS changes require a human sign-off. The AI cannot do this, no matter how confident it is."
+      : "Queued for QA — this writes to the quality record, so a human reviews it before anything is saved.";
+    setStep("st4",
+      `<div class="outcome ${isBlock?"block":"hold"}"><span class="badge ${isBlock?"block":"hold"}">${isBlock?"blocked":"queued"}</span> ${isBlock?"Human-only — batch release / LIMS writes":"Waiting for QA approval"}</div>` +
+      `<div class="body"><span class="biz-only">${esc(bizMsg)}</span><span class="tech-only">No side effect happened. ${esc(v.note)}</span></div>`);
     auditAppend(rid,"queued",{note:v.note});
   }
   renderAudit();
@@ -327,6 +463,50 @@ async function runAgent(){
 
 $("run").onclick = runAgent;
 $("msg").addEventListener("keydown", e=>{ if(e.key==="Enter" && (e.metaKey||e.ctrlKey)) runAgent(); });
+
+// ---- View toggle (Business / Technical) ----
+function setView(mode){
+  document.body.classList.toggle("mode-business", mode==="business");
+  document.body.classList.toggle("mode-technical", mode==="technical");
+  $("viewBiz").classList.toggle("on", mode==="business");
+  $("viewTech").classList.toggle("on", mode==="technical");
+}
+$("viewBiz").onclick = ()=>setView("business");
+$("viewTech").onclick = ()=>setView("technical");
+
+// ---- Guided customer scenario (auto-play) ----
+const TOUR = [
+  {preset:0, act:"Scene 1 · Speed",
+   text:'A scientist asks for a QC summary. It is read-only and low risk, so the AI <b>self-serves</b> instantly — no waiting. <b>Speed for the scientist.</b>'},
+  {preset:1, act:"Scene 2 · Control",
+   text:'Now the hard question a QA director always asks: <b>"Can the AI release my batch?"</b> The model is 92% confident — and the policy still says <b>NEVER</b>. Batch release stays human-only.'},
+  {preset:2, act:"Scene 3 · Human in the loop",
+   text:'An off-spec sample needs flagging. That writes to the quality record, so it is <b>queued for QA</b> review — not blocked, just supervised. Then check the audit log: every step is recorded and tamper-evident.'},
+];
+let tourRunning = false;
+
+async function playTour(){
+  if(tourRunning) return;
+  tourRunning = true;
+  $("play").disabled = true;
+  audit = []; renderAudit(); reqCounter = 0;
+  $("narr").classList.add("show");
+  for(const scene of TOUR){
+    $("narrAct").textContent = scene.act;
+    $("narrText").innerHTML = scene.text;
+    const [,text,who] = presets[scene.preset];
+    $("msg").value = text; lastAnalyst = who;
+    await wait(1400);
+    await runAgent();
+    await wait(1900);
+  }
+  $("narrAct").textContent = "Takeaway";
+  $("narrText").innerHTML = 'Same workflow, three stakeholders served: <b>speed</b> for scientists, <b>control</b> for QA, <b>safe integration</b> for IT — with a trail you can prove.';
+  await wait(600);
+  $("play").disabled = false;
+  tourRunning = false;
+}
+$("play").onclick = playTour;
 
 $("verify").onclick = ()=>{
   if(!audit.length){ return; }
