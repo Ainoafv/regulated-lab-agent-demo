@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Governed AI in a QC lab — a conversation aid for technical sales</title>
+<title>Governed AI for lab workflows — a working prototype by Ainoa Figueroa Vidal</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
   :root{
@@ -130,22 +130,23 @@
 <body class="mode-business">
 <div class="wrap">
   <header>
-    <div class="kicker">Technical sales · digital science &amp; automation</div>
-    <h1>Can AI help in a QC lab <span class="accent">without ever releasing a batch on its own?</span></h1>
-    <p class="sub">A walkthrough I'd use in a customer conversation: a scientist asks an AI assistant for help with batch B-2047. The model can <em>propose</em> actions — but a permission policy in code decides what runs, what waits for a human, and what is never automated. Every step is logged and tamper-evident. Fictional scenario — not Thermo Fisher software.</p>
+    <div class="kicker">Digital science · lab workflow automation · applied AI</div>
+    <h1>Can AI take work off a QC lab <span class="accent">without ever releasing a batch on its own?</span></h1>
+    <p class="sub">A working prototype I built to show how I'd automate and integrate AI into lab workflows: a scientist asks for help with batch B-2047, and the model can <em>propose</em> actions — but a permission policy in code decides what runs, what waits for a human, and what is never automated. Every step is logged and tamper-evident. Fictional scenario — not Thermo Fisher software.</p>
     <div class="ctxbar">
       <div class="ctx"><span class="ic">&#9879;</span>QC Lab · <span>HPLC</span></div>
       <div class="ctx"><span class="ic">&#9783;</span>Batch · <span>B-2047</span></div>
       <div class="ctx"><span class="ic">&#9888;</span>LIMS status · <span>hold</span> — pending QA review</div>
       <div class="ctx"><span class="ic">&#9823;</span>Analyst · <span>Dr. Rivera</span></div>
+      <div class="ctx"><span class="ic">&#8644;</span>Integrates · <span>LIMS · ELN · instruments</span></div>
     </div>
-    <p class="byline">Built by Ainoa Figueroa Vidal · governed AI for regulated lab workflows · interactive, no install</p>
+    <p class="byline">Built by Ainoa Figueroa Vidal · science + bioinformatics + AI · I design, build and integrate these workflows end-to-end · interactive, no install</p>
   </header>
 
   <div class="toolbar">
     <div class="tour">
-      <button class="play" id="play"><span class="tri">&#9654;</span> Play customer scenario</button>
-      <span class="tourhint">90-second guided story: a helpful summary, a release the AI is <b>not</b> allowed to do, and a flag that waits for QA.</span>
+      <button class="play" id="play"><span class="tri">&#9654;</span> Play the scenario</button>
+      <span class="tourhint">90-second walkthrough: a summary the AI can do on its own, a batch release it is <b>not</b> allowed to do, and an anomaly flag that waits for QA.</span>
     </div>
     <div class="viewtog">
       <span class="lbl">View</span>
@@ -221,7 +222,7 @@
         <button class="btn danger" id="tamper">Tamper a row</button>
       </div>
       <div class="verify" id="verifyout"></div>
-      <p class="legend" style="margin-top:10px">The compliance story: every action is logged, and each row is hashed to the one before it (<code>prev_hash</code>). Editing history breaks the chain — try <b>Tamper</b> then <b>Verify</b>.</p>
+      <p class="legend" style="margin-top:10px">The compliance story: every action is logged, and each row is hashed to the one before it (<code>prev_hash</code>). Editing history breaks the chain — try <b>Tamper</b> then <b>Verify</b>. Designed around <b>21 CFR Part 11</b> and <b>ALCOA++</b> data-integrity expectations.</p>
     </div>
   </div>
 
@@ -252,10 +253,36 @@
     </div>
   </div>
 
+  <div class="card" style="margin-top:18px">
+    <h2>How this maps to a digital science &amp; automation stack</h2>
+    <p style="font-size:12.5px;color:var(--mute);margin-bottom:12px">General industry patterns — not a specific product. It shows I understand where a governed AI layer sits in lab informatics (LIMS / ELN / SDMS), orchestration and automation.</p>
+    <table style="font-size:12.5px">
+      <thead><tr><th style="width:42%">In this prototype</th><th>Where it fits in a digital science stack</th></tr></thead>
+      <tbody>
+        <tr><td class="ev">Read-only summaries &amp; LIMS look-ups (AUTO)</td><td>Self-serve scientist actions on top of a <b>LIMS / ELN / SDMS</b> data layer</td></tr>
+        <tr><td class="ev">Anomaly flag with human review (ASK)</td><td>A <b>governed QC-analyst agent</b> — anomaly detection flagged for QA, not auto-actioned</td></tr>
+        <tr><td class="ev">Permission policy AUTO / ASK / NEVER, fail-closed</td><td><b>Responsible-AI governance</b>: GxP-critical actions (batch release, status change) stay human-only</td></tr>
+        <tr><td class="ev">Hash-chained, append-only audit</td><td><b>21 CFR Part 11 / ALCOA++</b> data-integrity trail for regulated labs</td></tr>
+        <tr><td class="ev">Closed action set, vendor-neutral design</td><td><b>Integration &amp; orchestration</b> across instruments, LIMS and ELN — connected-lab automation</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h2>Why I built this</h2>
+    <p style="font-size:13.5px;color:#475569;max-width:880px">
+      I come from science and bioinformatics, and I now build and integrate AI systems end-to-end. This prototype is how I think about the future of the connected lab:
+      <b>automating the repetitive work</b> (summaries, look-ups, draft notes), <b>integrating</b> across LIMS / ELN / instruments, and keeping a
+      <b>human in control</b> of anything that touches the quality record — the same direction the industry is taking with QC-analyst agents, lab orchestration and responsible-AI governance.
+      My edge isn't another LIMS CV — it's seeing the workflow from the
+      <b>end user's side</b> (scientist, QA, IT) and being able to design, build and explain it to each of them.
+    </p>
+  </div>
+
   <footer>
-    <span class="fic">Fictional QC scenario — not Thermo Fisher software.</span> Built as a conversation aid for technical sales.<br>
+    <span class="fic">Fictional QC scenario — not Thermo Fisher software.</span> A working prototype of how I'd automate and integrate AI into scientific workflows.<br>
     The model never changes LIMS, ELN, or batch release directly — code decides, humans approve GxP-critical actions, everything is logged.<br>
-    Same architecture I use in regulated clinical AI: closed action set, fail-closed permission policy, hash-chained audit.
+    Same architecture I run in regulated clinical AI: closed action set, fail-closed permission policy, hash-chained audit.
   </footer>
 </div>
 
@@ -272,7 +299,7 @@ function mockDecide(msg, analyst){
   if(t.includes("update lims") || t.includes("change status") || t.includes("clear hold") || t.includes("set status"))
     return {action:"update_lims_status", target:BATCH, reason:"Request to change LIMS batch status.", confidence:0.89, payload:{new_status:"released"}};
   if(t.includes("anomaly") || t.includes("off-spec") || t.includes("peak ratio") || t.includes("flag"))
-    return {action:"flag_anomaly", target:"S-18", reason:"Potential QC anomaly detected — needs QA review before ELN.", confidence:0.86, payload:{sample:"S-18",metric:"peak_ratio"}};
+    return {action:"flag_anomaly", target:"S-18", reason:"Governed QC-analyst agent: anomaly detected — flagged for QA review before any ELN write.", confidence:0.86, payload:{sample:"S-18",metric:"peak_ratio"}};
   if(t.includes("eln") || t.includes("log") || t.includes("deviation") || t.includes("record note"))
     return {action:"write_eln_entry", target:BATCH, reason:"Analyst wants to record a lab notebook entry.", confidence:0.84, payload:{entry_type:"deviation_note"}};
   if(t.includes("status") || t.includes("hold") || t.includes("lims"))
@@ -296,7 +323,7 @@ const FLOOR = 0.70;
 const ACTION_LABEL = {
   generate_summary:"Summarize QC results",
   query_lims_status:"Look up LIMS status",
-  flag_anomaly:"Flag an off-spec sample",
+  flag_anomaly:"Flag an off-spec sample (QC-analyst agent)",
   write_eln_entry:"Write an ELN entry",
   release_batch:"Release the batch",
   update_lims_status:"Change LIMS status"
@@ -474,14 +501,14 @@ function setView(mode){
 $("viewBiz").onclick = ()=>setView("business");
 $("viewTech").onclick = ()=>setView("technical");
 
-// ---- Guided customer scenario (auto-play) ----
+// ---- Guided lab scenario (auto-play) ----
 const TOUR = [
   {preset:0, act:"Scene 1 · Speed",
    text:'A scientist asks for a QC summary. It is read-only and low risk, so the AI <b>self-serves</b> instantly — no waiting. <b>Speed for the scientist.</b>'},
   {preset:1, act:"Scene 2 · Control",
    text:'Now the hard question a QA director always asks: <b>"Can the AI release my batch?"</b> The model is 92% confident — and the policy still says <b>NEVER</b>. Batch release stays human-only.'},
   {preset:2, act:"Scene 3 · Human in the loop",
-   text:'An off-spec sample needs flagging. That writes to the quality record, so it is <b>queued for QA</b> review — not blocked, just supervised. Then check the audit log: every step is recorded and tamper-evident.'},
+   text:'An off-spec sample needs flagging — this is the kind of work a <b>governed QC-analyst agent</b> does. Because it writes to the quality record, it is <b>queued for QA</b> review — not blocked, just supervised. Then check the audit log: every step is recorded and tamper-evident.'},
 ];
 let tourRunning = false;
 
