@@ -160,6 +160,37 @@
   .kpi.auto .v{color:var(--green)}.kpi.esc .v{color:var(--amber)}
   .impactnote{font-size:11px;color:var(--mute);margin-top:10px}
 
+  /* explainability (Responsible-AI) block inside the pipeline */
+  .xai{margin-top:10px;border:1px dashed var(--rule);border-radius:10px;padding:10px;background:#f8fafc}
+  .xai .xhead{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+  .confrow{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+  .confbar{flex:1;height:8px;border-radius:999px;background:#e2e8f0;overflow:hidden}
+  .conffill{height:100%;border-radius:999px;background:linear-gradient(90deg,#0ea5e9,#1d4ed8);transition:width .5s}
+  .confval{font-family:"JetBrains Mono",monospace;font-size:11.5px;font-weight:600;color:var(--ink);min-width:34px;text-align:right}
+  .conflbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--mute);min-width:62px}
+  .signals{display:flex;flex-wrap:wrap;gap:6px}
+  .sig{font-size:11px;background:#fff;border:1px solid var(--rule);border-radius:999px;padding:3px 9px;color:#475569}
+  .sig b{color:var(--ink)}
+
+  /* agent orchestration roster */
+  .agents{margin-top:18px}
+  .agentshead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+  .agentshead h2{font-family:"Inter Tight";font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink)}
+  .agentshead p{font-size:12px;color:var(--mute)}
+  .orch{display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#0f2942,#1e3a5f);color:#e8f0fb;border-radius:12px;padding:11px 15px;margin:10px 0 14px;font-size:13px}
+  .orch .ob{font-family:"Inter Tight";font-weight:800;font-size:11px;letter-spacing:.5px;text-transform:uppercase;background:rgba(147,197,253,.18);color:#bfdbfe;border-radius:8px;padding:5px 10px}
+  .orch .ot b{color:#fff}
+  .agentgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:860px){.agentgrid{grid-template-columns:1fr}}
+  .ag{border:1px solid var(--rule);border-radius:12px;padding:12px 14px;background:var(--card);transition:.2s;position:relative}
+  .ag .anm{font-family:"Inter Tight";font-weight:800;font-size:13.5px;color:var(--ink);display:flex;align-items:center;gap:8px}
+  .ag .ades{font-size:12px;color:var(--mute);margin-top:5px}
+  .ag .atag{position:absolute;top:11px;right:12px;font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;border-radius:999px;padding:2px 8px}
+  .ag .atag.live{color:var(--green);background:#dcfce7}
+  .ag .atag.plan{color:var(--mute);background:#f1f5f9;border:1px solid var(--rule)}
+  .ag.planned{opacity:.62;border-style:dashed}
+  .ag.active{border-color:var(--accent);box-shadow:0 6px 18px rgba(3,105,161,.16);transform:translateY(-2px)}
+
   /* view modes */
   body.mode-business .tech-only{display:none !important}
   body.mode-technical .biz-only{display:none}
@@ -295,6 +326,25 @@
     </div>
   </div>
 
+  <div class="agents">
+    <div class="agentshead">
+      <h2>Agent orchestration — one governed layer, many specialists</h2>
+      <p>An orchestrator routes each request to a specialist agent. Live agents act under the same permission policy; the rest is the roadmap.</p>
+    </div>
+    <div class="orch" id="orch">
+      <span class="ob" id="orchBadge">Orchestrator</span>
+      <span class="ot" id="orchText">Idle — run a request and the orchestrator routes it to the right specialist agent.</span>
+    </div>
+    <div class="agentgrid">
+      <div class="ag" id="agQc"><span class="atag live">live</span><div class="anm"><span>&#128300;</span> QC Reviewer</div><div class="ades">Anomaly detection on results, flagged for QA review — never auto-actioned. (ATR-style governed QC agent.)</div></div>
+      <div class="ag" id="agInsights"><span class="atag live">live</span><div class="anm"><span>&#128202;</span> QC Insights</div><div class="ades">Read-only summaries of batch / chromatography results for the scientist. Self-serve.</div></div>
+      <div class="ag" id="agData"><span class="atag live">live</span><div class="anm"><span>&#128269;</span> Data Query</div><div class="ades">Natural-language look-ups against LIMS status and sample data. Read-only.</div></div>
+      <div class="ag" id="agDoc"><span class="atag live">live</span><div class="anm"><span>&#9998;</span> Documentation</div><div class="ades">Drafts ELN / deviation notes — queued for human sign-off before any write.</div></div>
+      <div class="ag planned" id="agCapa"><span class="atag plan">roadmap</span><div class="anm"><span>&#128221;</span> Deviation / CAPA</div><div class="ades">Drafts deviation investigations and CAPA records from the quality event. Human-approved.</div></div>
+      <div class="ag planned" id="agVal"><span class="atag plan">roadmap</span><div class="anm"><span>&#128296;</span> Onboarding / Validation</div><div class="ades">Accelerates LIMS configuration and generates GxP validation documentation.</div></div>
+    </div>
+  </div>
+
   <div class="stake">
     <div class="stakehead">
       <h2>Who this serves — and who stays in control</h2>
@@ -427,6 +477,26 @@ const MINUTES = {
   write_eln_entry:4
 };
 
+// Orchestrator routing: which specialist agent owns each action.
+const AGENT_OF = {
+  generate_summary:{id:"agInsights", name:"QC Insights"},
+  query_lims_status:{id:"agData",     name:"Data Query"},
+  flag_anomaly:    {id:"agQc",       name:"QC Reviewer"},
+  write_eln_entry: {id:"agDoc",      name:"Documentation"},
+  release_batch:   {id:null,         name:"Disposition (human-only)"},
+  update_lims_status:{id:null,       name:"Disposition (human-only)"}
+};
+
+// Explainability (Responsible-AI): the signals behind each proposal.
+const SIGNALS = {
+  generate_summary:["intent: <b>summarize</b>","scope: read-only","data: 24 HPLC samples"],
+  query_lims_status:["intent: <b>status look-up</b>","scope: read-only","source: LIMS"],
+  flag_anomaly:["S-18 peak ratio <b>0.94 &lt; 0.95</b>","writes quality record","needs QA judgment"],
+  write_eln_entry:["intent: <b>record note</b>","writes ELN","needs human sign-off"],
+  release_batch:["GxP-critical: <b>batch disposition</b>","irreversible","human-only by policy"],
+  update_lims_status:["GxP-critical: <b>state change</b>","affects disposition","human-only by policy"]
+};
+
 function evaluate(d){
   const perm = POLICY[d.action] || "never";
   if(perm === "never")
@@ -523,6 +593,30 @@ function highlightOwner(action){
   else $("shIt").classList.add("active");
 }
 
+// ---- Agent orchestration ----
+const ALL_AGENTS = ["agQc","agInsights","agData","agDoc"];
+function clearAgents(){ ALL_AGENTS.forEach(a=>$(a).classList.remove("active")); }
+function routeAgent(action){
+  clearAgents();
+  const a = AGENT_OF[action] || {id:null, name:"Disposition (human-only)"};
+  if(a.id) $(a.id).classList.add("active");
+  $("orchBadge").textContent = "Orchestrator";
+  $("orchText").innerHTML = a.id
+    ? `Routed to <b>${a.name}</b> agent — acting under the permission policy.`
+    : `No agent is allowed to act — <b>${a.name}</b>. Routed straight to a person.`;
+}
+
+// Explainability panel (Responsible-AI): confidence + the signals behind the call.
+function renderXai(d){
+  const pct = Math.round(d.confidence*100);
+  const sigs = (SIGNALS[d.action]||[]).map(s=>`<span class="sig">${s}</span>`).join("");
+  return `<div class="xai">
+    <div class="xhead">&#9881; Explainability · Responsible-AI</div>
+    <div class="confrow"><span class="conflbl">Confidence</span><div class="confbar"><div class="conffill" style="width:${pct}%"></div></div><span class="confval">${d.confidence.toFixed(2)}</span></div>
+    <div class="signals">${sigs}</div>
+  </div>`;
+}
+
 // ---- Integration bus ----
 const BUS_NODE = {instr:"nInstr", lims:"nLims", eln:"nEln", audit:"nAudit"};
 const BUS_ST   = {instr:"sInstr", lims:"sLims", eln:"sEln", audit:"sAudit"};
@@ -569,6 +663,7 @@ async function runAgent(){
   $("run").disabled = true;
   resetSteps();
   resetBus();
+  clearAgents();
   $("verifyout").className="verify"; $("verifyout").textContent="";
 
   reqCounter++;
@@ -582,9 +677,11 @@ async function runAgent(){
   await wait(520);
   const decision = mockDecide(msg, analyst);
   const bizAction = ACTION_LABEL[decision.action] || decision.action;
+  routeAgent(decision.action);
   setStep("st2",
     `<span class="biz-only">The AI suggests: <b>${esc(bizAction)}</b>. We treat that as a request, not a command — it still has to pass the policy.</span>` +
     `<span class="tech-only">The model suggested a lab action. We don't trust it yet — we validate and gate it.</span>` +
+    renderXai(decision) +
     renderJSON(decision));
   auditAppend(rid,"decided",decision); renderAudit();
 
