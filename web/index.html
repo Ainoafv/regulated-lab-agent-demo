@@ -122,6 +122,44 @@
   footer .fic{font-weight:600;color:#475569}
   code{font-family:"JetBrains Mono",monospace;font-size:11.5px;background:#f1f5f9;padding:1px 5px;border-radius:4px}
 
+  /* connected-lab live strip: integration bus + automation impact */
+  .live{display:grid;grid-template-columns:1fr 326px;gap:16px;align-items:stretch;margin-bottom:14px}
+  @media(max-width:860px){.live{grid-template-columns:1fr}}
+  .live .card{height:100%}
+  .livehead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .livehead h2{margin-bottom:0}
+  .qbtn{border:1px solid var(--accent);background:var(--soft);color:var(--accent);font-family:Inter;font-weight:700;font-size:11.5px;padding:6px 11px;border-radius:8px;cursor:pointer;transition:.12s;display:inline-flex;align-items:center;gap:6px}
+  .qbtn:hover{background:var(--accent);color:#fff}
+  .qbtn:disabled{opacity:.5;cursor:not-allowed}
+  .bus{display:flex;align-items:stretch;gap:0}
+  .agent{flex:0 0 auto;align-self:center;background:var(--lab);color:#e2e8f0;border-radius:12px;padding:12px 14px;text-align:center;min-width:96px}
+  .agent .nm{font-family:"Inter Tight";font-weight:800;font-size:13px;color:#fff}
+  .agent .sub{font-size:9.5px;color:#93c5fd;text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+  .buslink{flex:0 0 28px;align-self:center;height:2px;background:linear-gradient(90deg,var(--rule),#cbd5e1);position:relative}
+  .nodes{flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .node{border:1px solid var(--rule);border-radius:11px;padding:10px 8px;text-align:center;background:#f8fafc;transition:.25s;position:relative}
+  .node .ic{font-size:18px;line-height:1;opacity:.7}
+  .node .nm{font-family:"Inter Tight";font-weight:700;font-size:11.5px;color:var(--ink);margin-top:5px}
+  .node .sys{font-size:9px;color:var(--mute);text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
+  .node .st{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-top:6px;height:13px;color:transparent}
+  .node.read{border-color:var(--accent);background:var(--soft);box-shadow:0 4px 14px rgba(3,105,161,.14)}
+  .node.read .ic{opacity:1}.node.read .st{color:var(--accent)}
+  .node.write{border-color:var(--amber);background:#fffbeb;box-shadow:0 4px 14px rgba(180,83,9,.14)}
+  .node.write .ic{opacity:1}.node.write .st{color:var(--amber)}
+  .node.blocked{border-color:var(--red);background:#fef2f2;box-shadow:0 4px 14px rgba(220,38,38,.14)}
+  .node.blocked .ic{opacity:1}.node.blocked .st{color:var(--red)}
+  .buscap{font-size:11px;color:var(--mute);margin-top:10px}
+  .buscap b{color:var(--ink)}
+  /* automation impact KPIs */
+  .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .kpi{border:1px solid var(--rule);border-radius:11px;padding:11px 12px;background:#f8fafc}
+  .kpi .v{font-family:"Inter Tight";font-weight:800;font-size:23px;color:var(--ink);line-height:1}
+  .kpi .l{font-size:10px;color:var(--mute);text-transform:uppercase;letter-spacing:.4px;margin-top:5px}
+  .kpi.saved{grid-column:1/3;background:linear-gradient(90deg,#ecfdf5,#f0fdfa);border-color:#a7f3d0}
+  .kpi.saved .v{color:var(--green);font-size:27px}
+  .kpi.auto .v{color:var(--green)}.kpi.esc .v{color:var(--amber)}
+  .impactnote{font-size:11px;color:var(--mute);margin-top:10px}
+
   /* view modes */
   body.mode-business .tech-only{display:none !important}
   body.mode-technical .biz-only{display:none}
@@ -160,6 +198,37 @@
   <div class="narr" id="narr">
     <span class="act" id="narrAct">Scene</span>
     <span class="ntext" id="narrText"></span>
+  </div>
+
+  <div class="live">
+    <div class="card">
+      <div class="livehead">
+        <h2>Connected lab — integration in motion</h2>
+        <button class="qbtn" id="queue"><span>&#9654;</span> Auto-run routine queue</button>
+      </div>
+      <div class="bus">
+        <div class="agent"><div class="nm">AI agent</div><div class="sub">orchestrates</div></div>
+        <div class="buslink"></div>
+        <div class="nodes">
+          <div class="node" id="nInstr"><div class="ic">&#9879;</div><div class="nm">Instrument</div><div class="sys">HPLC / SDMS</div><div class="st" id="sInstr">idle</div></div>
+          <div class="node" id="nLims"><div class="ic">&#9783;</div><div class="nm">LIMS</div><div class="sys">sample mgmt</div><div class="st" id="sLims">idle</div></div>
+          <div class="node" id="nEln"><div class="ic">&#9998;</div><div class="nm">ELN</div><div class="sys">notebook</div><div class="st" id="sEln">idle</div></div>
+          <div class="node" id="nAudit"><div class="ic">&#128274;</div><div class="nm">Audit</div><div class="sys">Part 11</div><div class="st" id="sAudit">idle</div></div>
+        </div>
+      </div>
+      <p class="buscap">The agent reads instruments &amp; LIMS, drafts into the ELN, and writes the audit trail — one orchestration layer across systems. <b>Blue = read, amber = write (human-approved), red = blocked by policy.</b> Watch the nodes as you run the agent.</p>
+    </div>
+    <div class="card">
+      <div class="livehead"><h2>Automation impact</h2></div>
+      <div class="kpis">
+        <div class="kpi auto"><div class="v" id="kAuto">0</div><div class="l">Auto-resolved</div></div>
+        <div class="kpi esc"><div class="v" id="kEsc">0</div><div class="l">Escalated to QA</div></div>
+        <div class="kpi"><div class="v" id="kBlock">0</div><div class="l">Blocked by policy</div></div>
+        <div class="kpi"><div class="v" id="kReq">0</div><div class="l">Requests handled</div></div>
+        <div class="kpi saved"><div class="v" id="kSaved">~0 min</div><div class="l">Analyst time given back</div></div>
+      </div>
+      <p class="impactnote">Routine, read-only work clears itself; only the risky writes reach a human. That is the automation case — measured, not promised.</p>
+    </div>
   </div>
 
   <div class="grid">
@@ -339,6 +408,25 @@ const OWNER = {
   update_lims_status:"qa"
 };
 
+// Which systems each action touches (integration bus) + how it touches them.
+// "read" = blue, "write" = amber (human-approved), "blocked" = red (policy stops the write).
+const SYSTEMS = {
+  generate_summary:{instr:"read", lims:"read"},
+  query_lims_status:{lims:"read"},
+  flag_anomaly:{instr:"read", eln:"write"},
+  write_eln_entry:{eln:"write"},
+  release_batch:{lims:"blocked"},
+  update_lims_status:{lims:"blocked"}
+};
+
+// Rough analyst minutes saved when an action is auto-resolved (read-only) end-to-end.
+const MINUTES = {
+  generate_summary:6,
+  query_lims_status:2,
+  flag_anomaly:5,
+  write_eln_entry:4
+};
+
 function evaluate(d){
   const perm = POLICY[d.action] || "never";
   if(perm === "never")
@@ -435,6 +523,44 @@ function highlightOwner(action){
   else $("shIt").classList.add("active");
 }
 
+// ---- Integration bus ----
+const BUS_NODE = {instr:"nInstr", lims:"nLims", eln:"nEln", audit:"nAudit"};
+const BUS_ST   = {instr:"sInstr", lims:"sLims", eln:"sEln", audit:"sAudit"};
+function resetBus(){
+  Object.keys(BUS_NODE).forEach(k=>{
+    $(BUS_NODE[k]).classList.remove("read","write","blocked");
+    $(BUS_ST[k]).textContent = "idle";
+  });
+}
+function lightBus(action, allowed){
+  resetBus();
+  const map = Object.assign({}, SYSTEMS[action] || {});
+  map.audit = "write"; // every action writes the audit trail
+  Object.entries(map).forEach(([sys,mode])=>{
+    const node = $(BUS_NODE[sys]); if(!node) return;
+    node.classList.add(mode);
+    $(BUS_ST[sys]).textContent = mode==="read" ? "read" : mode==="blocked" ? "blocked" : "write";
+  });
+}
+
+// ---- Automation impact KPIs ----
+let kpi = {auto:0, esc:0, block:0, req:0, min:0};
+function resetKpi(){ kpi={auto:0,esc:0,block:0,req:0,min:0}; renderKpi(); }
+function renderKpi(){
+  $("kAuto").textContent = kpi.auto;
+  $("kEsc").textContent  = kpi.esc;
+  $("kBlock").textContent= kpi.block;
+  $("kReq").textContent  = kpi.req;
+  $("kSaved").textContent= "~" + kpi.min + " min";
+}
+function bumpKpi(action, permission, allowed){
+  kpi.req++;
+  if(allowed){ kpi.auto++; kpi.min += (MINUTES[action]||3); }
+  else if(permission==="never") kpi.block++;
+  else kpi.esc++;
+  renderKpi();
+}
+
 const wait = ms => new Promise(r=>setTimeout(r,ms));
 
 async function runAgent(){
@@ -442,6 +568,7 @@ async function runAgent(){
   if(!msg) { $("msg").focus(); return; }
   $("run").disabled = true;
   resetSteps();
+  resetBus();
   $("verifyout").className="verify"; $("verifyout").textContent="";
 
   reqCounter++;
@@ -470,6 +597,8 @@ async function runAgent(){
   highlightOwner(decision.action);
 
   await wait(420);
+  lightBus(decision.action, v.allowed);
+  bumpKpi(decision.action, v.permission, v.allowed);
   if(v.allowed){
     const result = execute(decision);
     setStep("st4", `<div class="outcome exec"><span class="badge exec">executed</span> Read-only action completed</div><div class="body">${esc(result)}</div>`);
@@ -516,7 +645,8 @@ async function playTour(){
   if(tourRunning) return;
   tourRunning = true;
   $("play").disabled = true;
-  audit = []; renderAudit(); reqCounter = 0;
+  $("queue").disabled = true;
+  audit = []; renderAudit(); reqCounter = 0; resetKpi(); resetBus();
   $("narr").classList.add("show");
   for(const scene of TOUR){
     $("narrAct").textContent = scene.act;
@@ -528,12 +658,36 @@ async function playTour(){
     await wait(1900);
   }
   $("narrAct").textContent = "Takeaway";
-  $("narrText").innerHTML = 'Same workflow, three stakeholders served: <b>speed</b> for scientists, <b>control</b> for QA, <b>safe integration</b> for IT — with a trail you can prove.';
+  $("narrText").innerHTML = 'Same workflow, three stakeholders served: <b>speed</b> for scientists, <b>control</b> for QA, <b>safe integration</b> for IT — with a trail you can prove. See the <b>automation impact</b> above: routine work cleared, risk escalated.';
   await wait(600);
   $("play").disabled = false;
+  $("queue").disabled = false;
   tourRunning = false;
 }
 $("play").onclick = playTour;
+
+// ---- Auto-run routine queue (automation at scale) ----
+const QUEUE = [0,4,0,2]; // summary, LIMS query, summary, anomaly flag → 3 auto, 1 escalated
+async function runQueue(){
+  if(tourRunning) return;
+  tourRunning = true;
+  $("queue").disabled = true; $("play").disabled = true;
+  $("narr").classList.add("show");
+  $("narrAct").textContent = "Automation · overnight queue";
+  $("narrText").innerHTML = 'The agent works a backlog of routine requests on its own. Watch the <b>impact counters</b> climb — and the one risky item get <b>escalated to QA</b> instead of actioned.';
+  for(const idx of QUEUE){
+    const [,text,who] = presets[idx];
+    $("msg").value = text; lastAnalyst = who;
+    await wait(700);
+    await runAgent();
+    await wait(900);
+  }
+  $("narrAct").textContent = "Result";
+  $("narrText").innerHTML = 'Routine read-only work cleared itself; only the quality-record write reached a human. That is the automation case — <b>measured, not promised</b>.';
+  $("queue").disabled = false; $("play").disabled = false;
+  tourRunning = false;
+}
+$("queue").onclick = runQueue;
 
 $("verify").onclick = ()=>{
   if(!audit.length){ return; }
