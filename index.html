@@ -29,6 +29,12 @@
   .subbar .env{font-weight:600;color:#475569}
   .byline{font-size:11.5px;color:var(--mute)}
 
+  /* numbered section headers */
+  .sectionhd{display:flex;align-items:center;gap:13px;margin:30px 0 13px;padding-bottom:9px;border-bottom:2px solid var(--ink)}
+  .sectionhd .snum{font-family:"IBM Plex Mono";font-weight:600;font-size:13px;color:#fff;background:var(--ink);width:29px;height:29px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .sectionhd h3{font-family:"IBM Plex Sans";font-weight:700;font-size:14.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink);line-height:1.2}
+  .sectionhd .sdesc{font-size:12px;color:var(--mute);margin-top:2px;text-transform:none;letter-spacing:0;font-weight:400}
+
   /* toolbar: guided tour + view toggle */
   .toolbar{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--rule);border-radius:5px;padding:11px 14px;margin:0 0 12px}
   .tour{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -67,10 +73,10 @@
   .run:disabled{opacity:.5;cursor:not-allowed}
   .legend{margin-top:14px;font-size:11.5px;color:var(--mute)}
   .legend b{color:var(--ink)}
-  .pill{display:inline-block;font-size:10px;font-weight:700;border-radius:6px;padding:2px 7px;text-transform:uppercase;letter-spacing:.4px}
-  .pill.auto{background:#dcfce7;color:var(--green)}
-  .pill.ask{background:#fef3c7;color:var(--amber)}
-  .pill.never{background:#fee2e2;color:var(--red)}
+  .pill{display:inline-block;font-size:10px;font-weight:700;border-radius:3px;padding:2px 7px;text-transform:uppercase;letter-spacing:.4px;border:1px solid transparent}
+  .pill.auto{background:#157347;color:#fff}
+  .pill.ask{background:#b45309;color:#fff}
+  .pill.never{background:#b91c1c;color:#fff}
   .steps{display:flex;flex-direction:column;gap:12px}
   .step{border:1px solid var(--rule);border-left:3px solid var(--rule);border-radius:5px;padding:12px 14px;opacity:.35;transform:translateY(4px);transition:.35s}
   .step.show{opacity:1;transform:none}
@@ -383,6 +389,8 @@
     <span class="ntext" id="narrText"></span>
   </div>
 
+  <div class="sectionhd"><span class="snum">01</span><div><h3>Live workflow &amp; automation impact<div class="sdesc">What the agent clears on its own, and what it escalates — across a connected lab.</div></h3></div></div>
+
   <div class="live">
     <div class="card">
       <div class="livehead">
@@ -413,6 +421,8 @@
       <p class="impactnote">Routine, read-only work clears itself; only the risky writes reach a human. That is the automation case — measured, not promised.</p>
     </div>
   </div>
+
+  <div class="sectionhd"><span class="snum">02</span><div><h3>QC checks — predictive &amp; real data<div class="sdesc">An early-warning forecast, and a system-suitability check run on a real open-access dataset.</div></h3></div></div>
 
   <div class="palert">
     <div>
@@ -446,6 +456,8 @@
       </div>
     </div>
   </div>
+
+  <div class="sectionhd"><span class="snum">03</span><div><h3>Decision trace — request, policy, audit<div class="sdesc">Follow one request from the analyst through the permission policy to a tamper-evident audit entry.</div></h3></div></div>
 
   <div class="grid">
     <div class="card">
@@ -511,6 +523,8 @@
     </div>
   </div>
 
+  <div class="sectionhd"><span class="snum">04</span><div><h3>Orchestration &amp; who stays in control<div class="sdesc">One orchestrator routing specialist agents — and the three stakeholders the same policy has to satisfy.</div></h3></div></div>
+
   <div class="agents">
     <div class="agentshead">
       <h2>Agent orchestration — one governed layer, many specialists</h2>
@@ -558,7 +572,9 @@
     </div>
   </div>
 
-  <details class="card collapse" style="margin-top:18px">
+  <div class="sectionhd"><span class="snum">05</span><div><h3>Where this fits a digital-science stack<div class="sdesc">How the controlled AI layer maps onto LIMS / ELN / SDMS, orchestration and automation. Industry patterns, not a product.</div></h3></div></div>
+
+  <details class="card collapse">
     <summary><h2>How this maps to a digital science &amp; automation stack</h2><span class="chev">&#9656;</span></summary>
     <p style="font-size:12.5px;color:var(--mute)">General industry patterns — not a specific product. It shows I understand where a governed AI layer sits in lab informatics (LIMS / ELN / SDMS), orchestration and automation.</p>
     <table style="font-size:12.5px">
