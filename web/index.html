@@ -15,50 +15,54 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:"IBM Plex Sans",system-ui,sans-serif;color:#36424d;background:var(--bg);line-height:1.45;padding:24px 16px 60px;min-height:100vh}
   .wrap{max-width:1180px;margin:0 auto}
-  header{text-align:center;margin-bottom:14px}
-  .kicker{font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
-  h1{font-family:"IBM Plex Sans";font-weight:700;font-size:clamp(21px,3.4vw,31px);color:var(--ink);letter-spacing:-.4px}
-  h1 .accent{color:var(--accent)}
-  .sub{color:var(--mute);font-size:14px;margin-top:8px;max-width:760px;margin-left:auto;margin-right:auto}
-  .byline{font-size:12px;color:var(--mute);margin-top:8px}
-  .ctxbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0 6px}
-  .ctx{font-size:11.5px;font-weight:600;background:var(--lab);color:#e2e8f0;border-radius:8px;padding:6px 12px;letter-spacing:.2px;display:flex;align-items:center;gap:6px}
-  .ctx span{color:#93c5fd}
-  .ctx .ic{opacity:.8}
+  header.appbar{display:flex;justify-content:space-between;align-items:center;gap:18px;background:var(--lab);border:1px solid #0c2438;border-radius:5px;padding:13px 18px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand .logo{width:34px;height:34px;border-radius:5px;background:rgba(147,197,253,.13);color:#bfdbfe;display:flex;align-items:center;justify-content:center;font-size:17px;flex:0 0 auto}
+  .appname{font-family:"IBM Plex Sans";font-weight:700;font-size:16px;color:#fff;letter-spacing:.2px}
+  .proto{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#bfdbfe;background:rgba(147,197,253,.15);border-radius:3px;padding:2px 6px;margin-left:6px;vertical-align:middle}
+  .appdesc{font-size:12px;color:#9fb6cc;margin-top:3px;max-width:560px}
+  .appmeta{display:flex;gap:20px;flex-wrap:wrap}
+  .appmeta .m{font-size:12.5px;color:#d4dfea;display:flex;flex-direction:column;line-height:1.35;font-weight:600}
+  .appmeta .m i{font-style:normal;font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#7f97ad;font-weight:700;margin-bottom:1px}
+  .appmeta .m.warn{color:#fbbf24}
+  .subbar{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin:8px 2px 14px;font-size:11.5px;color:var(--mute)}
+  .subbar .env{font-weight:600;color:#475569}
+  .byline{font-size:11.5px;color:var(--mute)}
 
   /* toolbar: guided tour + view toggle */
-  .toolbar{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:12px 16px;margin:16px 0 14px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .toolbar{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--rule);border-radius:5px;padding:11px 14px;margin:0 0 12px}
   .tour{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
   .starthere{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);background:var(--soft);border:1px solid #bfdbfe;border-radius:999px;padding:4px 10px}
-  .play{border:none;background:var(--accent);color:#fff;font-family:"IBM Plex Sans";font-weight:600;font-size:14px;padding:10px 16px;border-radius:8px;cursor:pointer;transition:.12s;display:inline-flex;align-items:center;gap:8px}
+  .play{border:none;background:var(--accent);color:#fff;font-family:"IBM Plex Sans";font-weight:600;font-size:14px;padding:10px 16px;border-radius:5px;cursor:pointer;transition:.12s;display:inline-flex;align-items:center;gap:8px}
   .play:hover{background:#075985}
   .play:disabled{opacity:.55;cursor:not-allowed}
   .play .tri{font-size:11px}
   .tourhint{font-size:12px;color:var(--mute);max-width:320px}
   .viewtog{display:flex;align-items:center;gap:8px}
   .viewtog .lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mute)}
-  .seg{display:inline-flex;background:#f1f5f9;border:1px solid var(--rule);border-radius:10px;padding:3px}
-  .seg button{border:none;background:transparent;font-family:"IBM Plex Sans";font-weight:700;font-size:12.5px;color:var(--mute);padding:6px 14px;border-radius:8px;cursor:pointer;transition:.12s}
-  .seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(15,23,42,.12)}
+  .seg{display:inline-flex;background:#eef2f6;border:1px solid var(--rule);border-radius:5px;padding:3px}
+  .seg button{border:none;background:transparent;font-family:"IBM Plex Sans";font-weight:700;font-size:12.5px;color:var(--mute);padding:6px 14px;border-radius:3px;cursor:pointer;transition:.12s}
+  .seg button.on{background:#fff;color:var(--ink);border:1px solid var(--rule)}
 
   /* narration band for guided tour */
-  .narr{display:none;align-items:flex-start;gap:12px;background:linear-gradient(90deg,#0f2942,#1e3a5f);color:#e8f0fb;border-radius:8px;padding:14px 18px;margin-bottom:14px;box-shadow:0 6px 18px rgba(15,42,66,.25)}
+  .narr{display:none;align-items:flex-start;gap:12px;background:var(--lab);color:#e8f0fb;border:1px solid #0c2438;border-radius:5px;padding:13px 16px;margin-bottom:12px}
   .narr.show{display:flex}
   .narr .act{flex:0 0 auto;font-family:"IBM Plex Sans";font-weight:700;font-size:11px;letter-spacing:.6px;text-transform:uppercase;background:rgba(147,197,253,.18);color:#bfdbfe;border-radius:8px;padding:5px 10px;margin-top:1px}
   .narr .ntext{font-size:14.5px;font-weight:500}
   .narr .ntext b{color:#fff;font-weight:700}
 
-  .grid{display:grid;grid-template-columns:320px 1fr 340px;gap:16px;align-items:start}
-  @media(max-width:980px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:16px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .grid{display:grid;grid-template-columns:300px minmax(0,1fr) 320px;gap:16px;align-items:start}
+  @media(max-width:1080px){.grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--rule);border-radius:5px;padding:16px}
   .card h2{font-family:"IBM Plex Sans";font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink);margin-bottom:10px}
   label{font-size:12px;font-weight:600;color:var(--mute);display:block;margin-bottom:6px}
-  textarea{width:100%;min-height:74px;resize:vertical;border:1px solid var(--rule);border-radius:10px;padding:10px;font-family:"IBM Plex Sans";font-size:14px;color:var(--ink)}
+  textarea{width:100%;min-height:74px;resize:vertical;border:1px solid var(--rule);border-radius:5px;padding:10px;font-family:"IBM Plex Sans";font-size:14px;color:var(--ink)}
   textarea:focus{outline:none;border-color:var(--accent)}
   .chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
   .chip{font-size:12px;border:1px solid var(--rule);background:#f8fafc;color:#475569;border-radius:999px;padding:5px 10px;cursor:pointer;transition:.12s}
   .chip:hover{border-color:var(--accent);color:var(--accent);background:var(--soft)}
-  .run{margin-top:12px;width:100%;border:none;background:var(--ink);color:#fff;font-family:"IBM Plex Sans";font-weight:700;font-size:15px;padding:11px;border-radius:10px;cursor:pointer;transition:.12s}
+  .run{margin-top:12px;width:100%;border:none;background:var(--ink);color:#fff;font-family:"IBM Plex Sans";font-weight:700;font-size:15px;padding:11px;border-radius:5px;cursor:pointer;transition:.12s}
   .run:hover{background:#1e293b}
   .run:disabled{opacity:.5;cursor:not-allowed}
   .legend{margin-top:14px;font-size:11.5px;color:var(--mute)}
@@ -68,7 +72,7 @@
   .pill.ask{background:#fef3c7;color:var(--amber)}
   .pill.never{background:#fee2e2;color:var(--red)}
   .steps{display:flex;flex-direction:column;gap:12px}
-  .step{border:1px solid var(--rule);border-left:3px solid var(--rule);border-radius:10px;padding:12px 14px;opacity:.35;transform:translateY(4px);transition:.35s}
+  .step{border:1px solid var(--rule);border-left:3px solid var(--rule);border-radius:5px;padding:12px 14px;opacity:.35;transform:translateY(4px);transition:.35s}
   .step.show{opacity:1;transform:none}
   .step .stitle{font-family:"IBM Plex Sans";font-weight:700;font-size:13px;color:var(--ink);display:flex;align-items:center;gap:8px}
   .step .num{width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
@@ -76,7 +80,7 @@
   .step.s2{border-left-color:var(--accent2)}
   .step.s3{border-left-color:var(--accent)}
   .untrusted{font-size:10px;font-weight:700;color:var(--amber);background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:1px 6px;text-transform:uppercase;letter-spacing:.4px}
-  pre.json{font-family:"IBM Plex Mono",monospace;font-size:12px;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:10px;margin-top:8px;overflow:auto}
+  pre.json{font-family:"IBM Plex Mono",monospace;font-size:12px;background:#0f172a;color:#e2e8f0;border-radius:4px;padding:10px;margin-top:8px;overflow:auto}
   .gaterule{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--mute);margin-top:6px}
   .outcome{display:flex;align-items:center;gap:10px;font-family:"IBM Plex Sans";font-weight:700;font-size:16px;margin-top:4px}
   .outcome.exec{color:var(--green)}.outcome.hold{color:var(--amber)}.outcome.block{color:var(--red)}
@@ -96,7 +100,7 @@
   .verify.ok{display:block;background:#dcfce7;color:#065f46}
   .verify.bad{display:block;background:#fee2e2;color:#991b1b}
   .empty{color:var(--mute);font-size:12.5px;font-style:italic;padding:10px 4px}
-  .lims{font-size:12px;background:#f8fafc;border:1px solid var(--rule);border-radius:10px;padding:10px;margin-top:10px}
+  .lims{font-size:12px;background:#f8fafc;border:1px solid var(--rule);border-radius:5px;padding:10px;margin-top:10px}
   .lims dt{font-weight:600;color:var(--mute);font-size:10px;text-transform:uppercase;letter-spacing:.4px;margin-top:6px}
   .lims dt:first-child{margin-top:0}
   .lims dd{color:var(--ink);margin:2px 0 0}
@@ -162,7 +166,7 @@
   .impactnote{font-size:11px;color:var(--mute);margin-top:10px}
 
   /* predictive QC early-warning alert (plain-language, governed) */
-  .palert{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid var(--amber);border-radius:8px;padding:14px 18px;margin-bottom:14px;display:grid;grid-template-columns:1fr 230px;gap:18px;align-items:center}
+  .palert{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid var(--amber);border-radius:5px;padding:14px 18px;margin-bottom:12px;display:grid;grid-template-columns:1fr 230px;gap:18px;align-items:center}
   @media(max-width:760px){.palert{grid-template-columns:1fr}}
   .palert .ptag{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--amber);background:#fef3c7;border-radius:6px;padding:2px 8px;display:inline-block;margin-bottom:7px}
   .palert h3{font-family:"IBM Plex Sans";font-weight:700;font-size:14px;color:var(--ink);margin-bottom:4px}
@@ -194,7 +198,7 @@
   .rsdchart .bval{font-family:"IBM Plex Mono";font-size:10px;font-weight:600;fill:var(--ink)}
   .rsdchart .limit{stroke:var(--red);stroke-width:1.3;stroke-dasharray:5 3}
   .rsdchart .limittxt{font-family:"IBM Plex Sans";font-size:9.5px;font-weight:700;fill:var(--red)}
-  .sstverdict{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid var(--amber);border-radius:8px;padding:13px 15px}
+  .sstverdict{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid var(--amber);border-radius:5px;padding:13px 15px}
   .sstverdict .sv1{font-family:"IBM Plex Sans";font-weight:700;font-size:13px;color:var(--ink);margin-bottom:5px}
   .sstverdict .sv2{font-size:12px;color:#475569}
   .sstverdict .sv2 b{color:var(--ink)}
@@ -338,19 +342,24 @@
 </div>
 
 <div class="wrap">
-  <header>
-    <div class="kicker">Digital science · lab workflow automation · applied AI</div>
-    <h1>Can AI take work off a QC lab <span class="accent">without ever releasing a batch on its own?</span></h1>
-    <p class="sub">A working prototype of a governed AI layer for lab workflows. A QC analyst requests help on batch B-2047; the model can <em>propose</em> actions, but a permission policy in code decides what executes, what is held for human sign-off, and what is never automated. Every step is logged and tamper-evident. Fictional scenario — not Thermo Fisher software.</p>
-    <div class="ctxbar">
-      <div class="ctx"><span class="ic">&#9879;</span>QC Lab · <span>HPLC</span></div>
-      <div class="ctx"><span class="ic">&#9783;</span>Batch · <span>B-2047</span></div>
-      <div class="ctx"><span class="ic">&#9888;</span>LIMS status · <span>hold</span> — pending QA review</div>
-      <div class="ctx"><span class="ic">&#9823;</span>Analyst · <span>Dr. Rivera</span></div>
-      <div class="ctx"><span class="ic">&#8644;</span>Integrates · <span>LIMS · ELN · instruments</span></div>
+  <header class="appbar">
+    <div class="brand">
+      <span class="logo">&#9707;</span>
+      <div>
+        <div class="appname">Governed Lab Agent <span class="proto">prototype</span></div>
+        <div class="appdesc">AI agent for QC batch workflows — permission policy enforced in code · integrates LIMS · ELN · instruments</div>
+      </div>
     </div>
-    <p class="byline">Built by Ainoa Figueroa Vidal · science + bioinformatics + AI · I design, build and integrate these workflows end-to-end · interactive, no install</p>
+    <div class="appmeta">
+      <span class="m"><i>Batch</i>B-2047 · HPLC</span>
+      <span class="m warn"><i>LIMS status</i>hold — pending QA</span>
+      <span class="m"><i>Analyst</i>Dr. Rivera</span>
+    </div>
   </header>
+  <div class="subbar">
+    <span class="env">Fictional QC scenario — not Thermo Fisher software</span>
+    <span class="byline">Built by Ainoa Figueroa Vidal · I design, build and integrate these workflows end-to-end</span>
+  </div>
 
   <div class="toolbar">
     <div class="tour">
