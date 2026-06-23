@@ -29,6 +29,7 @@
   /* toolbar: guided tour + view toggle */
   .toolbar{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:12px 16px;margin:16px 0 14px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
   .tour{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .starthere{font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);background:var(--soft);border:1px solid #bfdbfe;border-radius:999px;padding:4px 10px}
   .play{border:none;background:var(--accent);color:#fff;font-family:"Inter Tight";font-weight:700;font-size:14px;padding:10px 16px;border-radius:10px;cursor:pointer;transition:.12s;display:inline-flex;align-items:center;gap:8px}
   .play:hover{background:#075985}
   .play:disabled{opacity:.55;cursor:not-allowed}
@@ -214,8 +215,9 @@
 
   <div class="toolbar">
     <div class="tour">
+      <span class="starthere">Start here</span>
       <button class="play" id="play"><span class="tri">&#9654;</span> Play the scenario</button>
-      <span class="tourhint">90-second walkthrough: a summary the AI can do on its own, a batch release it is <b>not</b> allowed to do, and an anomaly flag that waits for QA.</span>
+      <span class="tourhint">90-second guided walkthrough: a summary the AI can do on its own, a batch release it is <b>not</b> allowed to do, and an anomaly flag that waits for QA. Everything below fills in as it plays.</span>
     </div>
     <div class="viewtog">
       <span class="lbl">View</span>
@@ -235,7 +237,7 @@
     <div class="card">
       <div class="livehead">
         <h2>Connected lab — integration in motion</h2>
-        <button class="qbtn" id="queue"><span>&#9654;</span> Auto-run routine queue</button>
+        <button class="qbtn" id="queue" title="Runs a backlog of routine requests at once — see the impact counters climb"><span>&#9654;</span> Auto-run routine queue</button>
       </div>
       <div class="bus">
         <div class="agent"><div class="nm">AI agent</div><div class="sub">orchestrates</div></div>
