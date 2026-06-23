@@ -183,16 +183,17 @@
   .sst .cite a:hover{text-decoration:underline}
   .sstgrid{display:grid;grid-template-columns:1fr 296px;gap:20px;align-items:center}
   @media(max-width:760px){.sstgrid{grid-template-columns:1fr}}
-  .chart .ct{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--mute);margin-bottom:12px}
-  .bars{display:flex;align-items:flex-end;gap:16px;height:150px;position:relative;border-bottom:1px solid var(--rule);padding:0 4px}
-  .limln{position:absolute;left:0;right:0;border-top:1px dashed var(--red)}
-  .limlbl{position:absolute;right:2px;top:-15px;font-size:9.5px;color:var(--red);font-weight:700;background:var(--card);padding:0 3px}
-  .bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px}
-  .bar .col{width:64%;min-height:3px;border-radius:4px 4px 0 0;background:var(--green)}
-  .bar.fail .col{background:var(--amber)}
-  .bar .bv{font-family:"IBM Plex Mono";font-size:10px;font-weight:600;color:var(--ink)}
-  .barx{display:flex;gap:16px;margin-top:7px;padding:0 4px}
-  .barx span{flex:1;text-align:center;font-size:9.5px;color:var(--mute)}
+  .chart .ct{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--mute);margin-bottom:10px}
+  .rsdchart svg{width:100%;height:auto;display:block}
+  .rsdchart .gridln{stroke:#eef2f6;stroke-width:1}
+  .rsdchart .axis{stroke:#cbd5e1;stroke-width:1}
+  .rsdchart .ytick,.rsdchart .xlbl{font-family:"IBM Plex Sans";font-size:9.5px;fill:var(--mute)}
+  .rsdchart .ylabel{font-family:"IBM Plex Sans";font-size:9px;font-weight:600;fill:var(--mute);text-transform:uppercase;letter-spacing:.4px}
+  .rsdchart .bar-ok{fill:var(--green)}
+  .rsdchart .bar-fail{fill:var(--amber)}
+  .rsdchart .bval{font-family:"IBM Plex Mono";font-size:10px;font-weight:600;fill:var(--ink)}
+  .rsdchart .limit{stroke:var(--red);stroke-width:1.3;stroke-dasharray:5 3}
+  .rsdchart .limittxt{font-family:"IBM Plex Sans";font-size:9.5px;font-weight:700;fill:var(--red)}
   .sstverdict{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid var(--amber);border-radius:8px;padding:13px 15px}
   .sstverdict .sv1{font-family:"IBM Plex Sans";font-weight:700;font-size:13px;color:var(--ink);margin-bottom:5px}
   .sstverdict .sv2{font-size:12px;color:#475569}
@@ -359,10 +360,10 @@
     </div>
     <div class="viewtog">
       <button class="howto" id="howto"><span>&#9432;</span> How to use</button>
-      <span class="lbl">View</span>
+      <span class="lbl" title="Switches the depth of the panels once you run a scenario. Business = plain language for QA/scientists. Technical = raw JSON model output + the policy rule behind each decision.">View</span>
       <div class="seg">
-        <button id="viewBiz" class="on">Business</button>
-        <button id="viewTech">Technical</button>
+        <button id="viewBiz" class="on" title="Plain-language view for scientists / QA — what the agent did and why.">Business</button>
+        <button id="viewTech" title="Engineer view — raw JSON model output and the exact policy rule applied. Visible in panels 2–3 after you run a scenario.">Technical</button>
       </div>
     </div>
   </div>
@@ -424,16 +425,8 @@
     <p class="cite">Real QC data: Van Laethem et al., <i>Data in Brief</i> 2022 · Mendeley <a href="https://data.mendeley.com/datasets/csm5gsmr5t/1" target="_blank" rel="noopener">DOI 10.17632/csm5gsmr5t.1</a> · CC BY 4.0 · GMP-certified lab, U. Liège. System-suitability limit (<b>RSD ≤ 5%</b> on QC retention time) was set <i>a priori</i> by the source lab.</p>
     <div class="sstgrid">
       <div class="chart">
-        <div class="ct">QC compound 3-cyanopyridine · retention-time RSD (%) across pH conditions · 20-min gradient</div>
-        <div class="bars">
-          <div class="limln" style="bottom:125px"><span class="limlbl">SST limit 5.0%</span></div>
-          <div class="bar" title="pH 2.7 — RSD 3.2% — within limit"><div class="bv">3.2</div><div class="col" style="height:80px"></div></div>
-          <div class="bar fail" title="pH 3.5 — RSD 5.4% — exceeds the 5% limit"><div class="bv">5.4</div><div class="col" style="height:135px"></div></div>
-          <div class="bar fail" title="pH 5.0 — RSD 5.1% — exceeds the 5% limit"><div class="bv">5.1</div><div class="col" style="height:128px"></div></div>
-          <div class="bar" title="pH 6.5 — RSD 4.4% — within limit"><div class="bv">4.4</div><div class="col" style="height:110px"></div></div>
-          <div class="bar" title="pH 8.0 — RSD 3.4% — within limit"><div class="bv">3.4</div><div class="col" style="height:85px"></div></div>
-        </div>
-        <div class="barx"><span>pH 2.7</span><span>pH 3.5</span><span>pH 5.0</span><span>pH 6.5</span><span>pH 8.0</span></div>
+        <div class="ct">QC compound 3-cyanopyridine · retention-time RSD (%) by pH condition · 20-min gradient</div>
+        <div id="rsdchart" class="rsdchart"></div>
       </div>
       <div class="sstverdict">
         <div class="sv1">Agent: 2 conditions exceed the limit</div>
@@ -897,6 +890,29 @@ function setView(mode){
 }
 $("viewBiz").onclick = ()=>setView("business");
 $("viewTech").onclick = ()=>setView("technical");
+
+// ---- System-suitability RSD chart (SVG, built from the real dataset values) ----
+(function(){
+  const data=[{ph:"pH 2.7",v:3.2},{ph:"pH 3.5",v:5.4},{ph:"pH 5.0",v:5.1},{ph:"pH 6.5",v:4.4},{ph:"pH 8.0",v:3.4}];
+  const LIMIT=5.0, MAX=6, W=460, H=212, mL=30, mR=14, mT=16, mB=26;
+  const pw=W-mL-mR, ph=H-mT-mB, base=mT+ph;
+  const y=v=>mT+ph*(1-v/MAX);
+  const slot=pw/data.length, bw=Math.min(46, slot*0.5);
+  let s=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Retention-time RSD percent by pH condition; system-suitability limit 5 percent">`;
+  [0,2,4,6].forEach(t=>{ const yy=y(t); s+=`<line class="gridln" x1="${mL}" x2="${mL+pw}" y1="${yy}" y2="${yy}"/><text class="ytick" x="${mL-6}" y="${yy+3}" text-anchor="end">${t}</text>`; });
+  s+=`<text class="ylabel" x="${mL-23}" y="${mT+ph/2}" text-anchor="middle" transform="rotate(-90 ${mL-23} ${mT+ph/2})">RSD %</text>`;
+  data.forEach((d,i)=>{
+    const cx=mL+slot*(i+0.5), bx=cx-bw/2, by=y(d.v), bh=base-by, fail=d.v>LIMIT;
+    s+=`<rect class="${fail?"bar-fail":"bar-ok"}" x="${bx.toFixed(1)}" y="${by.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" rx="2"><title>${d.ph} — RSD ${d.v}% ${fail?"— exceeds the 5% limit":"— within limit"}</title></rect>`;
+    s+=`<text class="bval" x="${cx.toFixed(1)}" y="${(by-5).toFixed(1)}" text-anchor="middle">${d.v.toFixed(1)}</text>`;
+    s+=`<text class="xlbl" x="${cx.toFixed(1)}" y="${base+15}" text-anchor="middle">${d.ph}</text>`;
+  });
+  s+=`<line class="axis" x1="${mL}" x2="${mL+pw}" y1="${base}" y2="${base}"/>`;
+  const ly=y(LIMIT);
+  s+=`<line class="limit" x1="${mL}" x2="${mL+pw}" y1="${ly}" y2="${ly}"/><text class="limittxt" x="${mL+pw}" y="${ly-4}" text-anchor="end">SST limit 5.0%</text>`;
+  s+=`</svg>`;
+  const el=document.getElementById("rsdchart"); if(el) el.innerHTML=s;
+})();
 
 // ---- Welcome carousel (Overview, 3 screens) + separate How-to overlay ----
 function showScreen(n){
