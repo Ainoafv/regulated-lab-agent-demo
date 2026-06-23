@@ -5,19 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Governed AI for lab workflows — a working prototype by Ainoa Figueroa Vidal</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
   :root{
-    --ink:#0f172a; --accent:#0369a1; --accent2:#1d4ed8;
-    --green:#059669; --amber:#b45309; --red:#dc2626;
-    --soft:#eff6ff; --bg:#f1f5f9; --card:#ffffff; --rule:#e2e8f0; --mute:#64748b;
-    --lab:#1e3a5f;
+    --ink:#13212e; --accent:#1a4f7a; --accent2:#236295;
+    --green:#157347; --amber:#b45309; --red:#c2410c;
+    --soft:#eaf0f6; --bg:#f4f6f8; --card:#ffffff; --rule:#dce2e8; --mute:#5f6b76;
+    --lab:#16334d;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:Inter,system-ui,sans-serif;color:#334155;background:radial-gradient(1200px 480px at 50% -120px,#e7eef7 0%,var(--bg) 60%);line-height:1.45;padding:24px 16px 60px;min-height:100vh}
+  body{font-family:"IBM Plex Sans",system-ui,sans-serif;color:#36424d;background:var(--bg);line-height:1.45;padding:24px 16px 60px;min-height:100vh}
   .wrap{max-width:1180px;margin:0 auto}
   header{text-align:center;margin-bottom:14px}
   .kicker{font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
-  h1{font-family:"Inter Tight";font-weight:800;font-size:clamp(21px,3.4vw,31px);color:var(--ink);letter-spacing:-.4px}
+  h1{font-family:"IBM Plex Sans";font-weight:700;font-size:clamp(21px,3.4vw,31px);color:var(--ink);letter-spacing:-.4px}
   h1 .accent{color:var(--accent)}
   .sub{color:var(--mute);font-size:14px;margin-top:8px;max-width:760px;margin-left:auto;margin-right:auto}
   .byline{font-size:12px;color:var(--mute);margin-top:8px}
@@ -27,10 +27,10 @@
   .ctx .ic{opacity:.8}
 
   /* toolbar: guided tour + view toggle */
-  .toolbar{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:12px 16px;margin:16px 0 14px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .toolbar{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:12px 16px;margin:16px 0 14px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
   .tour{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .starthere{font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);background:var(--soft);border:1px solid #bfdbfe;border-radius:999px;padding:4px 10px}
-  .play{border:none;background:var(--accent);color:#fff;font-family:"Inter Tight";font-weight:700;font-size:14px;padding:10px 16px;border-radius:10px;cursor:pointer;transition:.12s;display:inline-flex;align-items:center;gap:8px}
+  .starthere{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);background:var(--soft);border:1px solid #bfdbfe;border-radius:999px;padding:4px 10px}
+  .play{border:none;background:var(--accent);color:#fff;font-family:"IBM Plex Sans";font-weight:600;font-size:14px;padding:10px 16px;border-radius:8px;cursor:pointer;transition:.12s;display:inline-flex;align-items:center;gap:8px}
   .play:hover{background:#075985}
   .play:disabled{opacity:.55;cursor:not-allowed}
   .play .tri{font-size:11px}
@@ -38,27 +38,27 @@
   .viewtog{display:flex;align-items:center;gap:8px}
   .viewtog .lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mute)}
   .seg{display:inline-flex;background:#f1f5f9;border:1px solid var(--rule);border-radius:10px;padding:3px}
-  .seg button{border:none;background:transparent;font-family:Inter;font-weight:700;font-size:12.5px;color:var(--mute);padding:6px 14px;border-radius:8px;cursor:pointer;transition:.12s}
+  .seg button{border:none;background:transparent;font-family:"IBM Plex Sans";font-weight:700;font-size:12.5px;color:var(--mute);padding:6px 14px;border-radius:8px;cursor:pointer;transition:.12s}
   .seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(15,23,42,.12)}
 
   /* narration band for guided tour */
-  .narr{display:none;align-items:flex-start;gap:12px;background:linear-gradient(90deg,#0f2942,#1e3a5f);color:#e8f0fb;border-radius:14px;padding:14px 18px;margin-bottom:14px;box-shadow:0 6px 18px rgba(15,42,66,.25)}
+  .narr{display:none;align-items:flex-start;gap:12px;background:linear-gradient(90deg,#0f2942,#1e3a5f);color:#e8f0fb;border-radius:8px;padding:14px 18px;margin-bottom:14px;box-shadow:0 6px 18px rgba(15,42,66,.25)}
   .narr.show{display:flex}
-  .narr .act{flex:0 0 auto;font-family:"Inter Tight";font-weight:800;font-size:11px;letter-spacing:.6px;text-transform:uppercase;background:rgba(147,197,253,.18);color:#bfdbfe;border-radius:8px;padding:5px 10px;margin-top:1px}
+  .narr .act{flex:0 0 auto;font-family:"IBM Plex Sans";font-weight:700;font-size:11px;letter-spacing:.6px;text-transform:uppercase;background:rgba(147,197,253,.18);color:#bfdbfe;border-radius:8px;padding:5px 10px;margin-top:1px}
   .narr .ntext{font-size:14.5px;font-weight:500}
   .narr .ntext b{color:#fff;font-weight:700}
 
   .grid{display:grid;grid-template-columns:320px 1fr 340px;gap:16px;align-items:start}
   @media(max-width:980px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:16px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
-  .card h2{font-family:"Inter Tight";font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink);margin-bottom:10px}
+  .card{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:16px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .card h2{font-family:"IBM Plex Sans";font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink);margin-bottom:10px}
   label{font-size:12px;font-weight:600;color:var(--mute);display:block;margin-bottom:6px}
-  textarea{width:100%;min-height:74px;resize:vertical;border:1px solid var(--rule);border-radius:10px;padding:10px;font-family:Inter;font-size:14px;color:var(--ink)}
+  textarea{width:100%;min-height:74px;resize:vertical;border:1px solid var(--rule);border-radius:10px;padding:10px;font-family:"IBM Plex Sans";font-size:14px;color:var(--ink)}
   textarea:focus{outline:none;border-color:var(--accent)}
   .chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
   .chip{font-size:12px;border:1px solid var(--rule);background:#f8fafc;color:#475569;border-radius:999px;padding:5px 10px;cursor:pointer;transition:.12s}
   .chip:hover{border-color:var(--accent);color:var(--accent);background:var(--soft)}
-  .run{margin-top:12px;width:100%;border:none;background:var(--ink);color:#fff;font-family:"Inter Tight";font-weight:700;font-size:15px;padding:11px;border-radius:10px;cursor:pointer;transition:.12s}
+  .run{margin-top:12px;width:100%;border:none;background:var(--ink);color:#fff;font-family:"IBM Plex Sans";font-weight:700;font-size:15px;padding:11px;border-radius:10px;cursor:pointer;transition:.12s}
   .run:hover{background:#1e293b}
   .run:disabled{opacity:.5;cursor:not-allowed}
   .legend{margin-top:14px;font-size:11.5px;color:var(--mute)}
@@ -70,29 +70,29 @@
   .steps{display:flex;flex-direction:column;gap:12px}
   .step{border:1px solid var(--rule);border-left:3px solid var(--rule);border-radius:10px;padding:12px 14px;opacity:.35;transform:translateY(4px);transition:.35s}
   .step.show{opacity:1;transform:none}
-  .step .stitle{font-family:"Inter Tight";font-weight:700;font-size:13px;color:var(--ink);display:flex;align-items:center;gap:8px}
+  .step .stitle{font-family:"IBM Plex Sans";font-weight:700;font-size:13px;color:var(--ink);display:flex;align-items:center;gap:8px}
   .step .num{width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
   .step .body{font-size:13px;margin-top:7px;color:#475569}
   .step.s2{border-left-color:var(--accent2)}
   .step.s3{border-left-color:var(--accent)}
   .untrusted{font-size:10px;font-weight:700;color:var(--amber);background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:1px 6px;text-transform:uppercase;letter-spacing:.4px}
-  pre.json{font-family:"JetBrains Mono",monospace;font-size:12px;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:10px;margin-top:8px;overflow:auto}
-  .gaterule{font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--mute);margin-top:6px}
-  .outcome{display:flex;align-items:center;gap:10px;font-family:"Inter Tight";font-weight:800;font-size:16px;margin-top:4px}
+  pre.json{font-family:"IBM Plex Mono",monospace;font-size:12px;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:10px;margin-top:8px;overflow:auto}
+  .gaterule{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--mute);margin-top:6px}
+  .outcome{display:flex;align-items:center;gap:10px;font-family:"IBM Plex Sans";font-weight:700;font-size:16px;margin-top:4px}
   .outcome.exec{color:var(--green)}.outcome.hold{color:var(--amber)}.outcome.block{color:var(--red)}
   .badge{font-size:11px;font-weight:700;border-radius:6px;padding:3px 9px;text-transform:uppercase;letter-spacing:.5px}
   .badge.exec{background:#dcfce7;color:var(--green)}.badge.hold{background:#fef3c7;color:var(--amber)}.badge.block{background:#fee2e2;color:var(--red)}
   table{width:100%;border-collapse:collapse;font-size:12px}
   th{text-align:left;color:var(--mute);font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;padding:6px 6px;border-bottom:1px solid var(--rule)}
   td{padding:6px 6px;border-bottom:1px solid #f1f5f9;vertical-align:top}
-  td.hash{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--mute)}
+  td.hash{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--mute)}
   td.ev{font-weight:600;color:var(--ink)}
   tr.tampered td{background:#fff1f2}
   .auditbtns{display:flex;gap:8px;margin-top:12px}
   .btn{flex:1;border:1px solid var(--rule);background:#f8fafc;color:#475569;font-weight:600;font-size:12px;padding:8px;border-radius:8px;cursor:pointer;transition:.12s}
   .btn:hover{border-color:var(--accent);color:var(--accent)}
   .btn.danger:hover{border-color:var(--red);color:var(--red)}
-  .verify{margin-top:10px;font-family:"JetBrains Mono",monospace;font-size:12px;padding:8px 10px;border-radius:8px;display:none}
+  .verify{margin-top:10px;font-family:"IBM Plex Mono",monospace;font-size:12px;padding:8px 10px;border-radius:8px;display:none}
   .verify.ok{display:block;background:#dcfce7;color:#065f46}
   .verify.bad{display:block;background:#fee2e2;color:#991b1b}
   .empty{color:var(--mute);font-size:12.5px;font-style:italic;padding:10px 4px}
@@ -105,23 +105,23 @@
   /* stakeholders panel */
   .stake{margin-top:16px}
   .stakehead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-  .stakehead h2{font-family:"Inter Tight";font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink)}
+  .stakehead h2{font-family:"IBM Plex Sans";font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink)}
   .stakehead p{font-size:12px;color:var(--mute)}
   .stakegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
   @media(max-width:760px){.stakegrid{grid-template-columns:1fr}}
-  .sh{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:14px 16px;transition:.2s;position:relative}
-  .sh .role{font-family:"Inter Tight";font-weight:800;font-size:14px;color:var(--ink);display:flex;align-items:center;gap:8px}
+  .sh{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:14px 16px;transition:.2s;position:relative}
+  .sh .role{font-family:"IBM Plex Sans";font-weight:700;font-size:14px;color:var(--ink);display:flex;align-items:center;gap:8px}
   .sh .ic{font-size:16px}
   .sh .want{font-size:12.5px;color:var(--mute);margin-top:6px}
   .sh .ctrl{font-size:11.5px;margin-top:9px;color:#475569;border-top:1px dashed var(--rule);padding-top:8px}
   .sh .ctrl b{color:var(--ink)}
-  .sh .owner{position:absolute;top:12px;right:12px;font-size:9.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--accent);background:var(--soft);border:1px solid #bfdbfe;border-radius:999px;padding:2px 8px;opacity:0;transition:.2s}
+  .sh .owner{position:absolute;top:12px;right:12px;font-size:9.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--accent);background:var(--soft);border:1px solid #bfdbfe;border-radius:999px;padding:2px 8px;opacity:0;transition:.2s}
   .sh.active{border-color:var(--accent);box-shadow:0 6px 18px rgba(3,105,161,.16);transform:translateY(-2px)}
   .sh.active .owner{opacity:1}
 
   footer{text-align:center;color:var(--mute);font-size:12px;margin-top:26px;line-height:1.7}
   footer .fic{font-weight:600;color:#475569}
-  code{font-family:"JetBrains Mono",monospace;font-size:11.5px;background:#f1f5f9;padding:1px 5px;border-radius:4px}
+  code{font-family:"IBM Plex Mono",monospace;font-size:11.5px;background:#f1f5f9;padding:1px 5px;border-radius:4px}
 
   /* connected-lab live strip: integration bus + automation impact */
   .live{display:grid;grid-template-columns:1fr 326px;gap:16px;align-items:stretch;margin-bottom:14px}
@@ -129,18 +129,18 @@
   .live .card{height:100%}
   .livehead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
   .livehead h2{margin-bottom:0}
-  .qbtn{border:1px solid var(--accent);background:var(--soft);color:var(--accent);font-family:Inter;font-weight:700;font-size:11.5px;padding:6px 11px;border-radius:8px;cursor:pointer;transition:.12s;display:inline-flex;align-items:center;gap:6px}
+  .qbtn{border:1px solid var(--accent);background:var(--soft);color:var(--accent);font-family:"IBM Plex Sans";font-weight:700;font-size:11.5px;padding:6px 11px;border-radius:8px;cursor:pointer;transition:.12s;display:inline-flex;align-items:center;gap:6px}
   .qbtn:hover{background:var(--accent);color:#fff}
   .qbtn:disabled{opacity:.5;cursor:not-allowed}
   .bus{display:flex;align-items:stretch;gap:0}
-  .agent{flex:0 0 auto;align-self:center;background:var(--lab);color:#e2e8f0;border-radius:12px;padding:12px 14px;text-align:center;min-width:96px}
-  .agent .nm{font-family:"Inter Tight";font-weight:800;font-size:13px;color:#fff}
+  .agent{flex:0 0 auto;align-self:center;background:var(--lab);color:#e2e8f0;border-radius:8px;padding:12px 14px;text-align:center;min-width:96px}
+  .agent .nm{font-family:"IBM Plex Sans";font-weight:700;font-size:13px;color:#fff}
   .agent .sub{font-size:9.5px;color:#93c5fd;text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
   .buslink{flex:0 0 28px;align-self:center;height:2px;background:linear-gradient(90deg,var(--rule),#cbd5e1);position:relative}
   .nodes{flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-  .node{border:1px solid var(--rule);border-radius:11px;padding:10px 8px;text-align:center;background:#f8fafc;transition:.25s;position:relative}
+  .node{border:1px solid var(--rule);border-radius:7px;padding:10px 8px;text-align:center;background:#f8fafc;transition:.25s;position:relative}
   .node .ic{font-size:18px;line-height:1;opacity:.7}
-  .node .nm{font-family:"Inter Tight";font-weight:700;font-size:11.5px;color:var(--ink);margin-top:5px}
+  .node .nm{font-family:"IBM Plex Sans";font-weight:700;font-size:11.5px;color:var(--ink);margin-top:5px}
   .node .sys{font-size:9px;color:var(--mute);text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
   .node .st{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-top:6px;height:13px;color:transparent}
   .node.read{border-color:var(--accent);background:var(--soft);box-shadow:0 4px 14px rgba(3,105,161,.14)}
@@ -153,21 +153,60 @@
   .buscap b{color:var(--ink)}
   /* automation impact KPIs */
   .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .kpi{border:1px solid var(--rule);border-radius:11px;padding:11px 12px;background:#f8fafc}
-  .kpi .v{font-family:"Inter Tight";font-weight:800;font-size:23px;color:var(--ink);line-height:1}
+  .kpi{border:1px solid var(--rule);border-radius:7px;padding:11px 12px;background:#f8fafc}
+  .kpi .v{font-family:"IBM Plex Sans";font-weight:700;font-size:23px;color:var(--ink);line-height:1}
   .kpi .l{font-size:10px;color:var(--mute);text-transform:uppercase;letter-spacing:.4px;margin-top:5px}
   .kpi.saved{grid-column:1/3;background:linear-gradient(90deg,#ecfdf5,#f0fdfa);border-color:#a7f3d0}
   .kpi.saved .v{color:var(--green);font-size:27px}
   .kpi.auto .v{color:var(--green)}.kpi.esc .v{color:var(--amber)}
   .impactnote{font-size:11px;color:var(--mute);margin-top:10px}
 
+  /* predictive QC early-warning alert (plain-language, governed) */
+  .palert{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid var(--amber);border-radius:8px;padding:14px 18px;margin-bottom:14px;display:grid;grid-template-columns:1fr 230px;gap:18px;align-items:center}
+  @media(max-width:760px){.palert{grid-template-columns:1fr}}
+  .palert .ptag{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--amber);background:#fef3c7;border-radius:6px;padding:2px 8px;display:inline-block;margin-bottom:7px}
+  .palert h3{font-family:"IBM Plex Sans";font-weight:700;font-size:14px;color:var(--ink);margin-bottom:4px}
+  .palert .pmsg{font-size:13px;color:#475569}
+  .palert .pmsg b{color:var(--ink)}
+  .palert .prec{font-size:12px;color:#475569;margin-top:8px;border-top:1px dashed #fde68a;padding-top:8px}
+  .palert .prec b{color:var(--ink)}
+  .ptrend .ptl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--mute);margin-bottom:7px}
+  .ptrend .pbar{height:9px;border-radius:999px;background:linear-gradient(90deg,#16a34a,#facc15,#f59e0b);position:relative}
+  .ptrend .pmark{position:absolute;top:-3px;width:3px;height:15px;background:#1e293b;border-radius:2px;left:82%}
+  .ptrend .pprob{font-family:"IBM Plex Mono";font-weight:600;font-size:18px;color:var(--amber);margin-top:9px}
+  .ptrend .pprob span{font-size:11px;color:var(--mute);font-family:"IBM Plex Sans";font-weight:500}
+
+  /* real-data system suitability check + bar chart */
+  .sst .ssthead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:3px}
+  .sst .cite{font-size:11px;color:var(--mute);margin-bottom:16px}
+  .sst .cite a{color:var(--accent);text-decoration:none}
+  .sst .cite a:hover{text-decoration:underline}
+  .sstgrid{display:grid;grid-template-columns:1fr 296px;gap:20px;align-items:center}
+  @media(max-width:760px){.sstgrid{grid-template-columns:1fr}}
+  .chart .ct{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--mute);margin-bottom:12px}
+  .bars{display:flex;align-items:flex-end;gap:16px;height:150px;position:relative;border-bottom:1px solid var(--rule);padding:0 4px}
+  .limln{position:absolute;left:0;right:0;border-top:1px dashed var(--red)}
+  .limlbl{position:absolute;right:2px;top:-15px;font-size:9.5px;color:var(--red);font-weight:700;background:var(--card);padding:0 3px}
+  .bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px}
+  .bar .col{width:64%;min-height:3px;border-radius:4px 4px 0 0;background:var(--green)}
+  .bar.fail .col{background:var(--amber)}
+  .bar .bv{font-family:"IBM Plex Mono";font-size:10px;font-weight:600;color:var(--ink)}
+  .barx{display:flex;gap:16px;margin-top:7px;padding:0 4px}
+  .barx span{flex:1;text-align:center;font-size:9.5px;color:var(--mute)}
+  .sstverdict{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid var(--amber);border-radius:8px;padding:13px 15px}
+  .sstverdict .sv1{font-family:"IBM Plex Sans";font-weight:700;font-size:13px;color:var(--ink);margin-bottom:5px}
+  .sstverdict .sv2{font-size:12px;color:#475569}
+  .sstverdict .sv2 b{color:var(--ink)}
+  .sstverdict .svgov{font-size:11.5px;color:#475569;margin-top:9px;border-top:1px dashed #fde68a;padding-top:9px}
+  .sstverdict .svgov .pill{vertical-align:middle}
+
   /* explainability (Responsible-AI) block inside the pipeline */
   .xai{margin-top:10px;border:1px dashed var(--rule);border-radius:10px;padding:10px;background:#f8fafc}
-  .xai .xhead{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+  .xai .xhead{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);margin-bottom:7px;display:flex;align-items:center;gap:6px}
   .confrow{display:flex;align-items:center;gap:9px;margin-bottom:8px}
   .confbar{flex:1;height:8px;border-radius:999px;background:#e2e8f0;overflow:hidden}
   .conffill{height:100%;border-radius:999px;background:linear-gradient(90deg,#0ea5e9,#1d4ed8);transition:width .5s}
-  .confval{font-family:"JetBrains Mono",monospace;font-size:11.5px;font-weight:600;color:var(--ink);min-width:34px;text-align:right}
+  .confval{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;color:var(--ink);min-width:34px;text-align:right}
   .conflbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--mute);min-width:62px}
   .signals{display:flex;flex-wrap:wrap;gap:6px}
   .sig{font-size:11px;background:#fff;border:1px solid var(--rule);border-radius:999px;padding:3px 9px;color:#475569}
@@ -176,17 +215,17 @@
   /* agent orchestration roster */
   .agents{margin-top:18px}
   .agentshead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px;flex-wrap:wrap}
-  .agentshead h2{font-family:"Inter Tight";font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink)}
+  .agentshead h2{font-family:"IBM Plex Sans";font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink)}
   .agentshead p{font-size:12px;color:var(--mute)}
-  .orch{display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#0f2942,#1e3a5f);color:#e8f0fb;border-radius:12px;padding:11px 15px;margin:10px 0 14px;font-size:13px}
-  .orch .ob{font-family:"Inter Tight";font-weight:800;font-size:11px;letter-spacing:.5px;text-transform:uppercase;background:rgba(147,197,253,.18);color:#bfdbfe;border-radius:8px;padding:5px 10px}
+  .orch{display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#0f2942,#1e3a5f);color:#e8f0fb;border-radius:8px;padding:11px 15px;margin:10px 0 14px;font-size:13px}
+  .orch .ob{font-family:"IBM Plex Sans";font-weight:700;font-size:11px;letter-spacing:.5px;text-transform:uppercase;background:rgba(147,197,253,.18);color:#bfdbfe;border-radius:8px;padding:5px 10px}
   .orch .ot b{color:#fff}
   .agentgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   @media(max-width:860px){.agentgrid{grid-template-columns:1fr}}
-  .ag{border:1px solid var(--rule);border-radius:12px;padding:12px 14px;background:var(--card);transition:.2s;position:relative}
-  .ag .anm{font-family:"Inter Tight";font-weight:800;font-size:13.5px;color:var(--ink);display:flex;align-items:center;gap:8px}
+  .ag{border:1px solid var(--rule);border-radius:8px;padding:12px 14px;background:var(--card);transition:.2s;position:relative}
+  .ag .anm{font-family:"IBM Plex Sans";font-weight:700;font-size:13.5px;color:var(--ink);display:flex;align-items:center;gap:8px}
   .ag .ades{font-size:12px;color:var(--mute);margin-top:5px}
-  .ag .atag{position:absolute;top:11px;right:12px;font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;border-radius:999px;padding:2px 8px}
+  .ag .atag{position:absolute;top:11px;right:12px;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;border-radius:999px;padding:2px 8px}
   .ag .atag.live{color:var(--green);background:#dcfce7}
   .ag .atag.plan{color:var(--mute);background:#f1f5f9;border:1px solid var(--rule)}
   .ag.planned{opacity:.62;border-style:dashed}
@@ -195,14 +234,113 @@
   /* view modes */
   body.mode-business .tech-only{display:none !important}
   body.mode-technical .biz-only{display:none}
+
+  /* collapsible card */
+  details.collapse summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  details.collapse summary::-webkit-details-marker{display:none}
+  details.collapse summary h2{margin-bottom:0}
+  details.collapse summary:hover h2{color:var(--accent)}
+  details.collapse .chev{font-size:11px;color:var(--mute);transition:.2s;flex:0 0 auto}
+  details.collapse[open] .chev{transform:rotate(90deg)}
+  details.collapse > *:not(summary){margin-top:12px}
+
+  /* intro / how-to overlay */
+  .intro-ov{position:fixed;inset:0;background:rgba(15,23,42,.58);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:60;padding:20px}
+  .intro-ov.hide{display:none}
+  .intro{background:#fff;border-radius:10px;max-width:580px;width:100%;padding:28px 30px 26px;box-shadow:0 18px 50px rgba(15,23,42,.28);position:relative;border:1px solid var(--rule)}
+  .intro .ik{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+  .intro h3{font-family:"IBM Plex Sans";font-weight:700;font-size:21px;color:var(--ink);letter-spacing:-.3px;margin-bottom:10px}
+  .intro .obj{font-size:14px;color:#475569;margin-bottom:18px}
+  .intro .obj b{color:var(--ink)}
+  .intro ol{list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:11px;margin-bottom:22px}
+  .intro li{counter-increment:s;position:relative;padding-left:38px;font-size:13.5px;color:#334155}
+  .intro li::before{content:counter(s);position:absolute;left:0;top:-1px;width:25px;height:25px;border-radius:50%;background:var(--accent);color:#fff;font-family:"IBM Plex Sans";font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center}
+  .intro li b{color:var(--ink)}
+  .intro .startbtn{border:none;background:var(--ink);color:#fff;font-family:"IBM Plex Sans";font-weight:600;font-size:14px;padding:12px 16px;border-radius:9px;cursor:pointer;transition:.12s}
+  .intro .startbtn:hover{background:#243441}
+  .intro .skip{position:absolute;top:16px;right:18px;border:none;background:transparent;color:var(--mute);font-size:20px;line-height:1;cursor:pointer;z-index:2}
+  .intronav{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:4px}
+  .intronav .startbtn{flex:1}
+  .backbtn{border:1px solid var(--rule);background:#fff;color:var(--mute);font-family:"IBM Plex Sans";font-weight:600;font-size:13px;padding:11px 15px;border-radius:9px;cursor:pointer;transition:.12s}
+  .backbtn:hover{border-color:var(--accent);color:var(--accent)}
+  .dots{display:flex;gap:6px;flex:0 0 auto}
+  .dots i{width:7px;height:7px;border-radius:50%;background:var(--rule);display:block;transition:.2s}
+  .dots i.on{background:var(--accent)}
+  .introstake{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+  .ist{border:1px solid var(--rule);border-left:3px solid var(--accent);border-radius:7px;padding:11px 13px}
+  .ist .r{display:block;font-family:"IBM Plex Sans";font-weight:700;font-size:13.5px;color:var(--ink);margin-bottom:3px}
+  .ist .d{font-size:12.5px;color:#475569}
+  .ist .d b{color:var(--ink)}
+  .howto{border:1px solid var(--rule);background:#fff;color:var(--mute);font-family:"IBM Plex Sans";font-weight:700;font-size:12px;padding:8px 13px;border-radius:9px;cursor:pointer;transition:.12s;display:inline-flex;align-items:center;gap:6px}
+  .howto:hover{border-color:var(--accent);color:var(--accent)}
 </style>
 </head>
 <body class="mode-business">
+
+<div class="intro-ov" id="introOv">
+  <div class="intro">
+    <button class="skip" id="introSkip" title="Close">&times;</button>
+
+    <div class="introscreen" id="introS1">
+      <div class="ik">Overview · 1 / 3</div>
+      <h3>Governed AI agent — QC batch workflow</h3>
+      <p class="obj">An AI agent handles routine QC requests on batch <b>B-2047</b> — result summaries, LIMS look-ups, draft ELN entries — under a permission policy enforced <b>in code</b>. The policy, not the model, decides what executes automatically, what is held for human sign-off, and what is <b>never</b> automated (batch release, LIMS status changes). Fictional scenario — not Thermo Fisher software.</p>
+      <div class="intronav">
+        <span class="dots"><i class="on"></i><i></i><i></i></span>
+        <button class="startbtn" id="toS2">Next: who stays in control &rarr;</button>
+      </div>
+    </div>
+
+    <div class="introscreen" id="introS2" style="display:none">
+      <div class="ik">Overview · 2 / 3</div>
+      <h3>Who it serves — and who stays in control</h3>
+      <p class="obj">The same workflow has to satisfy three stakeholders at once. The agent gives each what they need — without ever crossing the line the others care about.</p>
+      <div class="introstake">
+        <div class="ist"><span class="r">Scientist</span><span class="d"><b>Speed.</b> Instant summaries and answers, less manual paperwork — self-serve, read-only actions, never blocked by a queue.</span></div>
+        <div class="ist"><span class="r">QA &amp; Compliance</span><span class="d"><b>Control.</b> No AI touching the quality record or batch disposition unsupervised — human sign-off on every write, full audit trail.</span></div>
+        <div class="ist"><span class="r">IT</span><span class="d"><b>Safe integration.</b> A closed action set and a policy in code — no open-ended writes, fail-closed by default.</span></div>
+      </div>
+      <div class="intronav">
+        <button class="backbtn" id="toS1b">&larr; Back</button>
+        <span class="dots"><i></i><i class="on"></i><i></i></span>
+        <button class="startbtn" id="toS3">Next: why I built it &rarr;</button>
+      </div>
+    </div>
+
+    <div class="introscreen" id="introS3" style="display:none">
+      <div class="ik">Overview · 3 / 3</div>
+      <h3>Why I built this</h3>
+      <p class="obj">I come from science and bioinformatics, and I now build and integrate AI systems end-to-end. This prototype is how I think about the future of the connected lab: <b>automating the repetitive work</b> (summaries, look-ups, draft notes), <b>integrating</b> across LIMS / ELN / instruments, and keeping a <b>human in control</b> of anything that touches the quality record — the same direction the industry is taking with QC-analyst agents, lab orchestration and responsible-AI governance.</p>
+      <p class="obj">My edge isn't another LIMS CV — it's seeing the workflow from the <b>end user's side</b> (scientist, QA, IT) and being able to design, build and explain it to each of them.</p>
+      <div class="intronav">
+        <button class="backbtn" id="toS2b">&larr; Back</button>
+        <span class="dots"><i></i><i></i><i class="on"></i></span>
+        <button class="startbtn" id="introStart">Start the demo &rarr;</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="intro-ov hide" id="howtoOv">
+  <div class="intro">
+    <button class="skip" id="howtoSkip" title="Close">&times;</button>
+    <div class="ik">How to use</div>
+    <h3>Three ways to explore it</h3>
+    <ol>
+      <li><b>Run it.</b> Use <b>Play the scenario</b> for a 90-second walkthrough, or enter a request in panel <b>1</b>.</li>
+      <li><b>Follow the decision.</b> Panels <b>2</b> and <b>3</b> show the proposed action, the policy outcome (auto / ask / never) and a tamper-evident <b>audit trail</b> (21 CFR Part 11 / ALCOA++).</li>
+      <li><b>Go deeper.</b> The <b>Technical</b> toggle (top right) exposes the JSON output and the policy rules behind each decision.</li>
+    </ol>
+    <button class="startbtn" id="howtoClose" style="width:100%">Got it &rarr;</button>
+  </div>
+</div>
+
 <div class="wrap">
   <header>
     <div class="kicker">Digital science · lab workflow automation · applied AI</div>
     <h1>Can AI take work off a QC lab <span class="accent">without ever releasing a batch on its own?</span></h1>
-    <p class="sub">A working prototype I built to show how I'd automate and integrate AI into lab workflows: a scientist asks for help with batch B-2047, and the model can <em>propose</em> actions — but a permission policy in code decides what runs, what waits for a human, and what is never automated. Every step is logged and tamper-evident. Fictional scenario — not Thermo Fisher software.</p>
+    <p class="sub">A working prototype of a governed AI layer for lab workflows. A QC analyst requests help on batch B-2047; the model can <em>propose</em> actions, but a permission policy in code decides what executes, what is held for human sign-off, and what is never automated. Every step is logged and tamper-evident. Fictional scenario — not Thermo Fisher software.</p>
     <div class="ctxbar">
       <div class="ctx"><span class="ic">&#9879;</span>QC Lab · <span>HPLC</span></div>
       <div class="ctx"><span class="ic">&#9783;</span>Batch · <span>B-2047</span></div>
@@ -220,6 +358,7 @@
       <span class="tourhint">90-second guided walkthrough: a summary the AI can do on its own, a batch release it is <b>not</b> allowed to do, and an anomaly flag that waits for QA. Everything below fills in as it plays.</span>
     </div>
     <div class="viewtog">
+      <button class="howto" id="howto"><span>&#9432;</span> How to use</button>
       <span class="lbl">View</span>
       <div class="seg">
         <button id="viewBiz" class="on">Business</button>
@@ -243,10 +382,10 @@
         <div class="agent"><div class="nm">AI agent</div><div class="sub">orchestrates</div></div>
         <div class="buslink"></div>
         <div class="nodes">
-          <div class="node" id="nInstr"><div class="ic">&#9879;</div><div class="nm">Instrument</div><div class="sys">HPLC / SDMS</div><div class="st" id="sInstr">idle</div></div>
-          <div class="node" id="nLims"><div class="ic">&#9783;</div><div class="nm">LIMS</div><div class="sys">sample mgmt</div><div class="st" id="sLims">idle</div></div>
-          <div class="node" id="nEln"><div class="ic">&#9998;</div><div class="nm">ELN</div><div class="sys">notebook</div><div class="st" id="sEln">idle</div></div>
-          <div class="node" id="nAudit"><div class="ic">&#128274;</div><div class="nm">Audit</div><div class="sys">Part 11</div><div class="st" id="sAudit">idle</div></div>
+          <div class="node" id="nInstr" title="Instrument layer (e.g. HPLC) feeding raw results into an SDMS. Where the data originates."><div class="ic">&#9879;</div><div class="nm">Instrument</div><div class="sys">HPLC / SDMS</div><div class="st" id="sInstr">idle</div></div>
+          <div class="node" id="nLims" title="LIMS — sample management and QC status. The agent can query it (AUTO) but never changes status on its own (NEVER)."><div class="ic">&#9783;</div><div class="nm">LIMS</div><div class="sys">sample mgmt</div><div class="st" id="sLims">idle</div></div>
+          <div class="node" id="nEln" title="ELN — electronic lab notebook. Any write here is ASK: a human approves before the entry is recorded."><div class="ic">&#9998;</div><div class="nm">ELN</div><div class="sys">notebook</div><div class="st" id="sEln">idle</div></div>
+          <div class="node" id="nAudit" title="Hash-chained, append-only audit trail (21 CFR Part 11 / ALCOA++). Every action is logged and tamper-evident."><div class="ic">&#8801;</div><div class="nm">Audit</div><div class="sys">Part 11</div><div class="st" id="sAudit">idle</div></div>
         </div>
       </div>
       <p class="buscap">The agent reads instruments &amp; LIMS, drafts into the ELN, and writes the audit trail — one orchestration layer across systems. <b>Blue = read, amber = write (human-approved), red = blocked by policy.</b> Watch the nodes as you run the agent.</p>
@@ -261,6 +400,46 @@
         <div class="kpi saved"><div class="v" id="kSaved">~0 min</div><div class="l">Analyst time given back</div></div>
       </div>
       <p class="impactnote">Routine, read-only work clears itself; only the risky writes reach a human. That is the automation case — measured, not promised.</p>
+    </div>
+  </div>
+
+  <div class="palert">
+    <div>
+      <span class="ptag">Predictive QC · early warning · roadmap preview</span>
+      <h3>Sample S-18 trending toward off-spec</h3>
+      <p class="pmsg">Peak ratio is drifting toward the <b>0.95</b> limit. If the trend holds, batch <b>B-2047</b> is likely to deviate before release.</p>
+      <p class="prec"><b>Recommended:</b> review S-18 before disposition. The agent <b>flags and forecasts</b> — it never releases or changes a batch's status on its own.</p>
+    </div>
+    <div class="ptrend">
+      <div class="ptl">Trend to deviation</div>
+      <div class="pbar"><div class="pmark"></div></div>
+      <div class="pprob">85% <span>within ~2 h if unchanged</span></div>
+    </div>
+  </div>
+
+  <div class="card sst">
+    <div class="ssthead">
+      <h2>System suitability — checked on real chromatography data</h2>
+    </div>
+    <p class="cite">Real QC data: Van Laethem et al., <i>Data in Brief</i> 2022 · Mendeley <a href="https://data.mendeley.com/datasets/csm5gsmr5t/1" target="_blank" rel="noopener">DOI 10.17632/csm5gsmr5t.1</a> · CC BY 4.0 · GMP-certified lab, U. Liège. System-suitability limit (<b>RSD ≤ 5%</b> on QC retention time) was set <i>a priori</i> by the source lab.</p>
+    <div class="sstgrid">
+      <div class="chart">
+        <div class="ct">QC compound 3-cyanopyridine · retention-time RSD (%) across pH conditions · 20-min gradient</div>
+        <div class="bars">
+          <div class="limln" style="bottom:125px"><span class="limlbl">SST limit 5.0%</span></div>
+          <div class="bar" title="pH 2.7 — RSD 3.2% — within limit"><div class="bv">3.2</div><div class="col" style="height:80px"></div></div>
+          <div class="bar fail" title="pH 3.5 — RSD 5.4% — exceeds the 5% limit"><div class="bv">5.4</div><div class="col" style="height:135px"></div></div>
+          <div class="bar fail" title="pH 5.0 — RSD 5.1% — exceeds the 5% limit"><div class="bv">5.1</div><div class="col" style="height:128px"></div></div>
+          <div class="bar" title="pH 6.5 — RSD 4.4% — within limit"><div class="bv">4.4</div><div class="col" style="height:110px"></div></div>
+          <div class="bar" title="pH 8.0 — RSD 3.4% — within limit"><div class="bv">3.4</div><div class="col" style="height:85px"></div></div>
+        </div>
+        <div class="barx"><span>pH 2.7</span><span>pH 3.5</span><span>pH 5.0</span><span>pH 6.5</span><span>pH 8.0</span></div>
+      </div>
+      <div class="sstverdict">
+        <div class="sv1">Agent: 2 conditions exceed the limit</div>
+        <div class="sv2">Reviewed the QC retention-time series. 3-cyanopyridine breaches the <b>≤5% RSD</b> system-suitability limit at <b>pH 3.5 (5.4%)</b> and <b>pH 5.0 (5.1%)</b>.</div>
+        <div class="svgov"><span class="pill ask">ask</span> Proposed: <b>flag for QA review</b>. Queued for a human — the agent never clears, overrides, or dispositions an SST result on its own.</div>
+      </div>
     </div>
   </div>
 
@@ -281,10 +460,10 @@
       </dl>
       <div class="legend">
         <p style="margin-bottom:6px"><b>Permission policy</b> (enforced in code, not prompts):</p>
-        <p><span class="pill auto">auto</span> summarize, query LIMS — read-only, low risk</p>
-        <p style="margin-top:4px"><span class="pill ask">ask</span> flag anomaly, write ELN — human review before write</p>
-        <p style="margin-top:4px"><span class="pill never">never</span> release batch, change LIMS status — human only, GxP-critical</p>
-        <p style="margin-top:8px">Unknown action &rarr; <b>fail closed</b> (never). AUTO needs confidence &ge; 0.70 or it escalates.</p>
+        <p><span class="pill auto" title="AUTO: the code runs it without asking. Reserved for read-only, low-risk actions that can't alter the quality record.">auto</span> summarize, query LIMS — read-only, low risk</p>
+        <p style="margin-top:4px"><span class="pill ask" title="ASK: the agent may propose it, but a human must approve before anything is written. Used for any write to the ELN or quality-relevant flag.">ask</span> flag anomaly, write ELN — human review before write</p>
+        <p style="margin-top:4px"><span class="pill never" title="NEVER: the model is structurally not allowed to do this. Batch release and LIMS status changes stay 100% human, GxP-critical.">never</span> release batch, change LIMS status — human only, GxP-critical</p>
+        <p style="margin-top:8px" title="Any action not on the closed list defaults to NEVER (fail-closed). An AUTO action also needs ≥0.70 confidence or it escalates to a human.">Unknown action &rarr; <b>fail closed</b> (never). AUTO needs confidence &ge; 0.70 or it escalates.</p>
       </div>
     </div>
 
@@ -338,12 +517,13 @@
       <span class="ot" id="orchText">Idle — run a request and the orchestrator routes it to the right specialist agent.</span>
     </div>
     <div class="agentgrid">
-      <div class="ag" id="agQc"><span class="atag live">live</span><div class="anm"><span>&#128300;</span> QC Reviewer</div><div class="ades">Anomaly detection on results, flagged for QA review — never auto-actioned. (ATR-style governed QC agent.)</div></div>
-      <div class="ag" id="agInsights"><span class="atag live">live</span><div class="anm"><span>&#128202;</span> QC Insights</div><div class="ades">Read-only summaries of batch / chromatography results for the scientist. Self-serve.</div></div>
-      <div class="ag" id="agData"><span class="atag live">live</span><div class="anm"><span>&#128269;</span> Data Query</div><div class="ades">Natural-language look-ups against LIMS status and sample data. Read-only.</div></div>
-      <div class="ag" id="agDoc"><span class="atag live">live</span><div class="anm"><span>&#9998;</span> Documentation</div><div class="ades">Drafts ELN / deviation notes — queued for human sign-off before any write.</div></div>
-      <div class="ag planned" id="agCapa"><span class="atag plan">roadmap</span><div class="anm"><span>&#128221;</span> Deviation / CAPA</div><div class="ades">Drafts deviation investigations and CAPA records from the quality event. Human-approved.</div></div>
-      <div class="ag planned" id="agVal"><span class="atag plan">roadmap</span><div class="anm"><span>&#128296;</span> Onboarding / Validation</div><div class="ades">Accelerates LIMS configuration and generates GxP validation documentation.</div></div>
+      <div class="ag" id="agQc"><span class="atag live">live</span><div class="anm">QC Reviewer</div><div class="ades">Anomaly detection on results, flagged for QA review — never auto-actioned. (ATR-style governed QC agent.)</div></div>
+      <div class="ag" id="agInsights"><span class="atag live">live</span><div class="anm">QC Insights</div><div class="ades">Read-only summaries of batch / chromatography results for the scientist. Self-serve.</div></div>
+      <div class="ag" id="agData"><span class="atag live">live</span><div class="anm">Data Query</div><div class="ades">Natural-language look-ups against LIMS status and sample data. Read-only.</div></div>
+      <div class="ag" id="agDoc"><span class="atag live">live</span><div class="anm">Documentation</div><div class="ades">Drafts ELN / deviation notes — queued for human sign-off before any write.</div></div>
+      <div class="ag planned" id="agCapa"><span class="atag plan">roadmap</span><div class="anm">Deviation / CAPA</div><div class="ades">Drafts deviation investigations and CAPA records from the quality event. Human-approved.</div></div>
+      <div class="ag planned" id="agForecast"><span class="atag plan">roadmap</span><div class="anm">Predictive QC / forecasting</div><div class="ades">Predicts out-of-spec results and sample/test volumes from historical data — flagged for review, never auto-dispositioned.</div></div>
+      <div class="ag planned" id="agVal"><span class="atag plan">roadmap</span><div class="anm">Onboarding / Validation</div><div class="ades">Accelerates LIMS configuration and generates GxP validation documentation.</div></div>
     </div>
   </div>
 
@@ -354,19 +534,19 @@
     </div>
     <div class="stakegrid">
       <div class="sh" id="shScientist">
-        <div class="role"><span class="ic">&#128300;</span> Scientist</div>
+        <div class="role">Scientist</div>
         <div class="want">Wants speed: instant summaries and answers, less manual paperwork.</div>
         <div class="ctrl">Gets <b>self-serve</b> read-only actions. Never blocked by a queue for low-risk work.</div>
         <div class="owner">Owns this action</div>
       </div>
       <div class="sh" id="shQa">
-        <div class="role"><span class="ic">&#128737;</span> QA &amp; Compliance</div>
+        <div class="role">QA &amp; Compliance</div>
         <div class="want">Wants control: no AI touching the quality record or batch disposition unsupervised.</div>
         <div class="ctrl">Holds <b>human sign-off</b> on every write and every GxP-critical action, with a full audit trail.</div>
         <div class="owner">Owns this action</div>
       </div>
       <div class="sh" id="shIt">
-        <div class="role"><span class="ic">&#128421;</span> IT</div>
+        <div class="role">IT</div>
         <div class="want">Wants integration that doesn't break LIMS/ELN or open a security hole.</div>
         <div class="ctrl">Gets a <b>closed action set</b> and a policy in code — no open-ended writes, fail-closed by default.</div>
         <div class="owner">Owns this action</div>
@@ -374,9 +554,9 @@
     </div>
   </div>
 
-  <div class="card" style="margin-top:18px">
-    <h2>How this maps to a digital science &amp; automation stack</h2>
-    <p style="font-size:12.5px;color:var(--mute);margin-bottom:12px">General industry patterns — not a specific product. It shows I understand where a governed AI layer sits in lab informatics (LIMS / ELN / SDMS), orchestration and automation.</p>
+  <details class="card collapse" style="margin-top:18px">
+    <summary><h2>How this maps to a digital science &amp; automation stack</h2><span class="chev">&#9656;</span></summary>
+    <p style="font-size:12.5px;color:var(--mute)">General industry patterns — not a specific product. It shows I understand where a governed AI layer sits in lab informatics (LIMS / ELN / SDMS), orchestration and automation.</p>
     <table style="font-size:12.5px">
       <thead><tr><th style="width:42%">In this prototype</th><th>Where it fits in a digital science stack</th></tr></thead>
       <tbody>
@@ -387,18 +567,7 @@
         <tr><td class="ev">Closed action set, vendor-neutral design</td><td><b>Integration &amp; orchestration</b> across instruments, LIMS and ELN — connected-lab automation</td></tr>
       </tbody>
     </table>
-  </div>
-
-  <div class="card" style="margin-top:16px">
-    <h2>Why I built this</h2>
-    <p style="font-size:13.5px;color:#475569;max-width:880px">
-      I come from science and bioinformatics, and I now build and integrate AI systems end-to-end. This prototype is how I think about the future of the connected lab:
-      <b>automating the repetitive work</b> (summaries, look-ups, draft notes), <b>integrating</b> across LIMS / ELN / instruments, and keeping a
-      <b>human in control</b> of anything that touches the quality record — the same direction the industry is taking with QC-analyst agents, lab orchestration and responsible-AI governance.
-      My edge isn't another LIMS CV — it's seeing the workflow from the
-      <b>end user's side</b> (scientist, QA, IT) and being able to design, build and explain it to each of them.
-    </p>
-  </div>
+  </details>
 
   <footer>
     <span class="fic">Fictional QC scenario — not Thermo Fisher software.</span> A working prototype of how I'd automate and integrate AI into scientific workflows.<br>
@@ -728,6 +897,28 @@ function setView(mode){
 }
 $("viewBiz").onclick = ()=>setView("business");
 $("viewTech").onclick = ()=>setView("technical");
+
+// ---- Welcome carousel (Overview, 3 screens) + separate How-to overlay ----
+function showScreen(n){
+  $("introS1").style.display = n===1 ? "block" : "none";
+  $("introS2").style.display = n===2 ? "block" : "none";
+  $("introS3").style.display = n===3 ? "block" : "none";
+}
+function closeIntro(){ $("introOv").classList.add("hide"); }
+function closeHowto(){ $("howtoOv").classList.add("hide"); }
+$("toS2").onclick       = ()=>showScreen(2);
+$("toS3").onclick       = ()=>showScreen(3);
+$("toS1").onclick       = ()=>showScreen(1);
+$("toS1b").onclick      = ()=>showScreen(1);
+$("toS2b").onclick      = ()=>showScreen(2);
+$("introStart").onclick = closeIntro;
+$("introSkip").onclick  = closeIntro;
+$("howto").onclick      = ()=>$("howtoOv").classList.remove("hide");
+$("howtoClose").onclick = closeHowto;
+$("howtoSkip").onclick  = closeHowto;
+$("introOv").addEventListener("click", e=>{ if(e.target===$("introOv")) closeIntro(); });
+$("howtoOv").addEventListener("click", e=>{ if(e.target===$("howtoOv")) closeHowto(); });
+document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ closeIntro(); closeHowto(); } });
 
 // ---- Guided lab scenario (auto-play) ----
 const TOUR = [
