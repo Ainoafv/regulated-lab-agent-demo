@@ -181,7 +181,8 @@
   .ptrend .pprob span{font-size:11px;color:var(--mute);font-family:"IBM Plex Sans";font-weight:500}
 
   /* real-data system suitability check + bar chart */
-  .sst .ssthead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:3px}
+  .sst .ssthead{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin-bottom:3px}
+  .realtag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#fff;background:var(--green);border-radius:3px;padding:3px 8px;flex:0 0 auto}
   .sst .cite{font-size:11px;color:var(--mute);margin-bottom:16px}
   .sst .cite a{color:var(--accent);text-decoration:none}
   .sst .cite a:hover{text-decoration:underline}
@@ -351,9 +352,9 @@
       </div>
     </div>
     <div class="appmeta">
-      <span class="m"><i>Batch</i>B-2047 · HPLC</span>
-      <span class="m warn"><i>LIMS status</i>hold — pending QA</span>
-      <span class="m"><i>Analyst</i>Dr. Rivera</span>
+      <span class="m" title="The QC batch under analysis, run on an HPLC instrument. All requests in this demo are about this batch."><i>Batch</i>B-2047 · HPLC</span>
+      <span class="m warn" title="The batch is on hold in the LIMS: one sample is off-spec and it is waiting for QA disposition. The agent can read this status but can never change it."><i>LIMS status</i>hold — pending QA</span>
+      <span class="m" title="The analyst making the requests. The agent acts on their behalf, within the permission policy."><i>Analyst</i>Dr. Rivera</span>
     </div>
   </header>
   <div class="subbar">
@@ -403,11 +404,11 @@
     <div class="card">
       <div class="livehead"><h2>Automation impact</h2></div>
       <div class="kpis">
-        <div class="kpi auto"><div class="v" id="kAuto">0</div><div class="l">Auto-resolved</div></div>
-        <div class="kpi esc"><div class="v" id="kEsc">0</div><div class="l">Escalated to QA</div></div>
-        <div class="kpi"><div class="v" id="kBlock">0</div><div class="l">Blocked by policy</div></div>
-        <div class="kpi"><div class="v" id="kReq">0</div><div class="l">Requests handled</div></div>
-        <div class="kpi saved"><div class="v" id="kSaved">~0 min</div><div class="l">Analyst time given back</div></div>
+        <div class="kpi auto" title="Read-only, low-risk requests the agent completed on its own (AUTO) — no human needed."><div class="v" id="kAuto">0</div><div class="l">Auto-resolved</div></div>
+        <div class="kpi esc" title="Requests that touch the quality record — held for human sign-off (ASK) before anything is written."><div class="v" id="kEsc">0</div><div class="l">Escalated to QA</div></div>
+        <div class="kpi" title="Actions the agent is structurally never allowed to do (NEVER), e.g. batch release — refused outright."><div class="v" id="kBlock">0</div><div class="l">Blocked by policy</div></div>
+        <div class="kpi" title="Total requests processed in this session (auto-resolved + escalated + blocked)."><div class="v" id="kReq">0</div><div class="l">Requests handled</div></div>
+        <div class="kpi saved" title="Rough estimate of manual analyst time saved by auto-resolving the routine, read-only requests."><div class="v" id="kSaved">~0 min</div><div class="l">Analyst time given back</div></div>
       </div>
       <p class="impactnote">Routine, read-only work clears itself; only the risky writes reach a human. That is the automation case — measured, not promised.</p>
     </div>
@@ -429,6 +430,7 @@
 
   <div class="card sst">
     <div class="ssthead">
+      <span class="realtag" title="Unlike the rest of the demo (a fictional B-2047 scenario), this section runs on a real, published open-access chromatography QC dataset.">real open-access data</span>
       <h2>System suitability — checked on real chromatography data</h2>
     </div>
     <p class="cite">Real QC data: Van Laethem et al., <i>Data in Brief</i> 2022 · Mendeley <a href="https://data.mendeley.com/datasets/csm5gsmr5t/1" target="_blank" rel="noopener">DOI 10.17632/csm5gsmr5t.1</a> · CC BY 4.0 · GMP-certified lab, U. Liège. System-suitability limit (<b>RSD ≤ 5%</b> on QC retention time) was set <i>a priori</i> by the source lab.</p>
